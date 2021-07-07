@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}
+New Application
+{% endblock %}
+
+{% block main %}
+{% if project_id %}
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">Add An Application</h3>
+        <div class="card-text card-container">
+            <form action="/{{ project_id }}/new_application" method="post">
+                <div class="form-row">
+                    <div class="form-group col text-justify">
+                        <label for="inputCompanyName">Company name:</label>
+                        <input type="text" class="form-control" id="inputCompanyName" name="company_name">
+                    </div>
+                    <div class="form-group col text-justify">
+                        <label for="inputRole">Role:</label>
+                        <input type="text" class="form-control" id="inputRole" name="role">
+                    </div>
+                </div>
+                <div class="form-row align-items-end">
+                    <div class="form-group col text-justify">
+                        <label for="applicationStatusList">Application status:</label>
+                        <select class="form-control" id="applicationStatusList" name="application_status">
+                            <option disabled selected value="">Choose in the list</option>
+                            {% for stage in stages %}
+                            <option>{{ stage }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <span id="or">or</span>
+                    <div class="form-group col">
+                        <input type="text" class="form-control" id="customStatus" name="custom_status"
+                            placeholder="Use a custom status">
+                    </div>
+                </div>
+                <div class="form-row justify-content-between">
+                    <div class="form-group col-5 align-items-end">
+                        <div class="form-group text-justify">
+                            <label for="applicationDate">Date & Time:</label>
+                            <input type="date" class="form-control" name="status_date">
+                        </div>
+                        <div class="form-group text-justify">
+                            <input type="text" class="form-control" name="status_time" placeholder="HH:MM">
+                        </div>
+                    </div>
+                    <div class="form-group col-4 text-justify">
+                        <label for="applicationRank">Rank:</label>
+                        <input type="number" class="form-control" id="applicationRank" name="application_rank" min="1">
+                        <small id="applicationRank" class="form-text text-muted">How you rank this application in your top. Can be the same as another application.</small>
+                    </div>
+                </div>
+                <div class="form-group text-justify">
+                    <label for="applicationMemo">Memo:</label>
+                    <textarea name="application_memo" class="form-control" id="applicationMemo" rows="3"
+                        placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>
+                    <small id="applicationMemo" class="form-text text-muted">Anything you want to remember about
+                        this application on the projects list.</small>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Confirm</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

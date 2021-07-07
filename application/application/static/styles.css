@@ -1,0 +1,97 @@
+/* Common */
+body {
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+a {
+    color: #4D648D;
+}
+
+h3 {
+    padding-bottom: 0.8em;
+    letter-spacing: .1em;
+    color: #283655;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+td {
+    width: 20%;
+    word-wrap: break-word;
+}
+
+#navbar_title {
+    padding: 0.2em;
+    margin-right: 1em;
+    font-size: 26px;
+    letter-spacing: .1em;
+}
+#navbar_title a {
+    color: #283655;
+    text-decoration: none;
+}
+
+.container {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.btn-primary { 
+    background-color: #4D648D;
+    border-color: #4D648D;
+    color: #fff;
+    letter-spacing: .1em;
+    padding: 0.3em;
+    padding-right: 1em;
+    padding-left: 1em;
+    box-shadow: none !important;
+    border: 0 !important;
+}
+
+.btn-primary:hover {
+    background-color: #283655 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.btn-primary:focus {
+    background-color: #283655 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.card {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.card-container {
+    padding-left: 2em !important;
+    padding-right: 2em !important;
+}
+
+.form-control:focus {
+    color: #1E1F26;
+    background-color: #fff;
+    border-color: #D0E1F9;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem #D0E1F9;
+}
+
+.col-sm {
+    padding-top: 1em;
+    padding-right: 4em;
+    padding-left: 4em;
+}
+
+#login-card {
+    padding-top: 2em;
+    border-right: 0.5px solid lightgrey;
+}
+
+#or {
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+}

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <h3>Welcome, {{ name }}.</h3>
+
+    <div class="form-group">
+        <form action="/new_project" method="get">
+            <button class="btn btn-primary" type="submit">New Project</button>
+        </form>
+    </div>
+
+    {% if projects %}
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Project Name</th>
+                <th scope="col">Creation Date</th>
+                <th scope="col">Starting Date</th>
+                <th scope="col">Ending Date</th>
+                <th scope="col">Memo</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in projects %}
+            <tr>
+                <td scope="row"><a href="/dashboard/{{ row.id }}">{{ row.name }}</a></td>
+                <td>{{ row.created_on }}</td>
+                <td>{{ row.started_on }}</td>
+                <td>{{ row.ended_on }}</td>
+                <td>{{ row.project_memo }}</td>
+                <td><img alt="Edit project" src="static/pencil.svg"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

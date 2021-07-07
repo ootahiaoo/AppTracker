@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+New Project
+{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">Create A New Project</h3>
+        <div class="card-text card-container">
+            <form action="/new_project" method="post">
+                <div class="form-group row">
+                    <label for="projectName">Project name:</label>
+                    <input name="project_name" type="text" class="form-control" id="projectName" aria-describedby="projectNameCaption"
+                        placeholder="Example: 2021 job change, sophomore internship, job hunting abroad...">
+                    <small id="projectNameCaption" class="form-text text-muted">A name to help you remember when the job
+                        hunting happened or what it was about.</small>
+                </div>
+
+                <div class="form-group row">
+                    <label for="projectMemo">Memo:</label>
+                    <textarea name="project_memo" class="form-control" id="projectMemo" rows="3" placeholder="Example: received 3 offers, had to put on hold, nice experience with several companies..."></textarea>
+                    <small id="projectMemo" class="form-text text-muted">Anything you want to see about this job hunting
+                        on the projects list.</small>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Add New Project</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
