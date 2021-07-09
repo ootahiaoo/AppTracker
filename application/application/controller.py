@@ -42,7 +42,7 @@ def create_application(project_id, company_id, role, memo, rank, application_sta
     # TODO: handle error, return response
     model.create_application(project_id, company_id, role, memo, rank)
     application_id = get_application_id(project_id, company_id)
-    create_process(application_id, application_status, datetime)
+    create_stage(application_id, application_status, datetime)
 
 
 def get_application(project_id, company_id):
@@ -57,5 +57,17 @@ def get_all_applications(project_id):
     return model.get_all_applications(project_id)
 
 
-def create_process(application_id, status, datetime):
-    model.create_process(application_id, status, datetime)
+def create_stage(application_id, status, datetime, memo=""):
+    model.create_stage(application_id, status, datetime, memo)
+
+
+def get_process(application_id):
+    return model.get_process(application_id)
+
+
+def get_stage(stage_id):
+    return model.get_stage(stage_id)
+
+
+def edit_stage(stage_id, type, date, stage_memo):
+    model.update_stage(stage_id, type, date, stage_memo)

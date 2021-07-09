@@ -1,0 +1,46 @@
+{% extends "layout.html" %} {% block title %} Add Interview Stage {% endblock %} {% block main %} {% if application_id %}
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">Add An Interview Stage</h3>
+        <div class="card-text card-container">
+            <form action="/new_stage_{{ application_id }}" method="post">
+                <div class="form-group row text-justify">
+                    <label for="stageType" class="col-sm-3 col-form-label">Stage:</label>
+                    <div class="col">
+                        <select class="form-control mb-2" name="stage_status">
+                            <option disabled selected value="">Default list</option>
+                            {% for stage in stages %}
+                            <option>{{ stage }}</option>
+                            {% endfor %}
+                        </select>
+                        <input name="custom_status" type="text" class="form-control" id="stageType" aria-describedby="stageTypeCaption" placeholder="Custom status">
+                        <small id="stageTypeCaption" class="form-text text-muted">Choose in the default list or set a
+                            custom status.</small>
+                    </div>
+                </div>
+
+                <div class="form-group row text-justify">
+                    <label class="col-sm-3 col-form-label">Date & Time:</label>
+                    <div class="col-sm-4 mb-2">
+                        <input name="stage_date" type="date" class="form-control">
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="stage_time" placeholder="HH:MM">
+                    </div>
+                </div>
+
+                <div class="form-group row text-justify">
+                    <label for="stageMemo" class="col-sm-3 col-form-label">Memo:</label>
+                    <div class="col">
+                        <textarea name="stage_memo" class="form-control" id="stageMemo" rows="3"></textarea>
+                        <small id="stageMemo" class="form-text text-muted">Example: interviewer names, things that you
+                            need to prepare, etc.</small>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %} {% endblock %}

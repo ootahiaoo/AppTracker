@@ -1,0 +1,36 @@
+{% extends "layout.html" %} {% block title %} Application Details {% endblock %} {% block main %}
+<div class="container">
+    <h3>Interview Process</h3>
+    {% if application_id %}
+    <div class="form-group">
+        <form action="/new_stage_{{ application_id }}" method="get">
+            <button class="btn btn-primary" type="submit">Add</button>
+        </form>
+    </div>
+
+    {% if stages %}
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th style="width:20%">Stage</th>
+                <th style="width:20%">Date</th>
+                <th style="width:50%">Memo</th>
+                <th style="width:10%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in stages %}
+            <tr>
+                <td>{{ row.type }}</td>
+                <td>{% if row.date == ""%}n/a{% else %}{{ row.date }}{% endif %}</td>
+                <td>{% if row.stage_memo == "" %}n/a{% else %}{{ row.stage_memo }}{% endif %}</td>
+                <td>
+                    <a href="/edit_stage_{{ row.id }}"><img alt="Edit stage" src="/static/pencil.svg"></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %} {% endif %}
+</div>
+{% endblock %}

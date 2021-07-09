@@ -35,7 +35,7 @@ def new_project():
     return redirect("/")
 
 
-@app.route("/edit_project/<project_id>", methods=["GET", "POST"])
+@app.route("/edit_project_<project_id>", methods=["GET", "POST"])
 @login_required
 def edit_project(project_id):
     if request.method == "GET":
@@ -51,7 +51,7 @@ def edit_project(project_id):
     return redirect("/")
 
 
-@app.route("/dashboard/<project_id>", methods=["GET", "POST"])
+@app.route("/dashboard_<project_id>", methods=["GET", "POST"])
 @login_required
 def dashboard(project_id):
     # Merge requests?
@@ -60,7 +60,7 @@ def dashboard(project_id):
     return render_template("dashboard.html", project=project, applications=applications)
 
 
-@app.route("/<project_id>/new_application", methods=["GET", "POST"])
+@app.route("/new_application_<project_id>", methods=["GET", "POST"])
 @login_required
 def new_application(project_id):
     if request.method == "GET":
@@ -90,7 +90,64 @@ def new_application(project_id):
     controller.create_application(
         project_id, company_id, role, memo, rank, application_status, datetime)
 
-    return redirect("/dashboard/" + project_id)
+    return dashboard(project_id)
+
+
+@app.route("/application_details_<application_id>", methods=["GET", "POST"])
+@login_required
+def application_details(application_id):
+    stages = controller.get_process(application_id)
+
+    return render_template("application_details.html", application_id=application_id, stages=stages)
+
+
+@app.route("/new_stage_<application_id>", methods=["GET", "POST"])
+@login_required
+def add_stage(application_id):
+    if request.method == "GET":
+        return render_template("new_stage.html", application_id=application_id, stages=status)
+    type = request.form.get("stage_status")
+    if not type:
+        type = request.form.get("custom_status")
+    date = request.form.get("stage_date")
+    time = request.form.get("stage_time")
+    if not date or not time:
+        datetime = ""
+    else:
+        datetime = date + " " + time
+    stage_memo = request.form.get("stage_memo")
+    controller.create_stage(application_id, type, datetime, stage_memo)
+
+    return application_details(application_id)
+
+
+@app.route("/edit_stage_<stage_id>", methods=["GET", "POST"])
+@login_required
+def edit_stage(stage_id):
+    stage = controller.get_stage(stage_id)
+    if request.method == "GET":
+        return render_template("edit_stage.html", stage=stage)
+
+    type = request.form.get("stage_status")
+    if not type:
+        type = request.form.get("custom_status")
+    date = request.form.get("stage_date")
+    time = request.form.get("stage_time")
+    if not date or not time:
+        datetime = ""
+    else:
+        datetime = date + " " + time
+    stage_memo = request.form.get("stage_memo")
+    if not stage_memo:
+        stage_memo = ""
+    controller.edit_stage(stage_id, type, datetime, stage_memo)
+
+    return application_details(stage.application_id)
+
+
+@app.route("/company_<company_id>", methods=["GET", "POST"])
+def company_details(company_id):
+    return redirect("/")
 
 
 @app.route("/login", methods=["GET", "POST"])

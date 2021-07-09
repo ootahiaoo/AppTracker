@@ -11,6 +11,10 @@ class User(object):
 
     @classmethod
     def from_json(cls, json_string):
+        """
+        Convert to python object using JSON
+        https://www.youtube.com/watch?v=hJ2HfejqppE
+        """
         json_dict = json.loads(json_string)
         return cls(**json_dict)
 
@@ -32,7 +36,7 @@ class Project(object):
 
 
 class Application(object):
-    def __init__(self, id, project_id, company_id, role, application_memo, rank, company_name, company_memo, application_id, type, date, stage_memo):
+    def __init__(self, id, project_id, company_id, role, application_memo, rank, company_name, type, date):
         self.id = id
         self.project_id = project_id
         self.company_id = company_id
@@ -106,7 +110,8 @@ def create_project(user_id, created_on, name, project_memo):
 
 def edit_project(project_id, name, started_on, ended_on, project_memo):
     with Database() as db:
-        db.execute("UPDATE projects SET name = ?, started_on = ?, ended_on = ?, project_memo = ? WHERE id = ?", name, started_on, ended_on, project_memo, project_id)
+        db.execute("UPDATE projects SET name = ?, started_on = ?, ended_on = ?, project_memo = ? WHERE id = ?",
+                   name, started_on, ended_on, project_memo, project_id)
 
 
 def get_project(project_id):
@@ -180,7 +185,7 @@ def get_application_id(project_id, company_id):
 def get_all_applications(project_id):
     with Database() as db:
         rows = db.execute(
-            "SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id WHERE project_id = ? ORDER BY rank", project_id)
+            "SELECT id, project_id, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id ORDER BY stage.id DESC) WHERE project_id = ? GROUP BY application_id ORDER BY rank", project_id)
     if len(rows) == 0:
         return None
     applications = []
@@ -190,16 +195,24 @@ def get_all_applications(project_id):
     return applications
 
 
-def create_process(application_id, status, datetime):
+def create_stage(application_id, status, datetime, stage_memo):
     with Database() as db:
         db.execute(
-            "INSERT INTO stage (application_id, type, date) VALUES(?, ?, ?)", application_id, status, datetime)
+            "INSERT INTO stage (application_id, type, date, stage_memo) VALUES(?, ?, ?, ?)", application_id, status, datetime, stage_memo)
+
+
+def get_stage(stage_id):
+    with Database() as db:
+        rows = db.execute("SELECT * FROM stage WHERE id = ?", stage_id)
+    if len(rows) == 0:
+        return None
+    return Stage.from_json(json.dumps(rows[0]))
 
 
 def get_process(application_id):
     with Database() as db:
         rows = db.execute(
-            "SELECT * FROM stage WHERE application_id = ? ORDER BY date", application_id)
+            "SELECT * FROM stage WHERE application_id = ? ORDER BY id DESC", application_id)
     if len(rows) == 0:
         return None
     stages = []
@@ -207,3 +220,9 @@ def get_process(application_id):
         stage = Stage.from_json(json.dumps(row))
         stages.append(stage)
     return stages
+
+
+def update_stage(stage_id, type, date, stage_memo):
+    with Database() as db:
+        db.execute("UPDATE stage SET type = ?, date = ?, stage_memo = ? WHERE id = ?",
+                   type, date, stage_memo, stage_id)

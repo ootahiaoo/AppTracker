@@ -1,16 +1,9 @@
-{% extends "layout.html" %}
-
-{% block title %}
-New Application
-{% endblock %}
-
-{% block main %}
-{% if project_id %}
+{% extends "layout.html" %} {% block title %} New Application {% endblock %} {% block main %} {% if project_id %}
 <div class="card">
     <div class="card-body">
         <h3 class="card-title">Add An Application</h3>
         <div class="card-text card-container">
-            <form action="/{{ project_id }}/new_application" method="post">
+            <form action="/new_application_{{ project_id }}" method="post">
                 <div class="form-row">
                     <div class="form-group col text-justify">
                         <label for="inputCompanyName">Company name:</label>
@@ -33,8 +26,7 @@ New Application
                     </div>
                     <span id="or">or</span>
                     <div class="form-group col">
-                        <input type="text" class="form-control" id="customStatus" name="custom_status"
-                            placeholder="Use a custom status">
+                        <input type="text" class="form-control" id="customStatus" name="custom_status" placeholder="Use a custom status">
                     </div>
                 </div>
                 <div class="form-row justify-content-between">
@@ -55,16 +47,14 @@ New Application
                 </div>
                 <div class="form-group text-justify">
                     <label for="applicationMemo">Memo:</label>
-                    <textarea name="application_memo" class="form-control" id="applicationMemo" rows="3"
-                        placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>
+                    <textarea name="application_memo" class="form-control" id="applicationMemo" rows="3" placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>
                     <small id="applicationMemo" class="form-text text-muted">Anything you want to remember about
                         this application on the projects list.</small>
                 </div>
 
-                <button class="btn btn-primary" type="submit">Confirm</button>
+                <button class="btn btn-primary" type="submit">Create</button>
             </form>
         </div>
     </div>
 </div>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}
