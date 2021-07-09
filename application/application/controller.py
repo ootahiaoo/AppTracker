@@ -18,6 +18,10 @@ def create_project(user_id, created_on, name, memo):
     model.create_project(user_id, created_on, name, memo)
 
 
+def edit_project(project_id, name, started_on, ended_on, project_memo):
+    model.edit_project(project_id, name, started_on, ended_on, project_memo)
+
+
 def get_project(project_id):
     return model.get_project(project_id)
 

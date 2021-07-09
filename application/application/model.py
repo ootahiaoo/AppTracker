@@ -98,10 +98,15 @@ def get_user_with_username(username):
     return User.from_json(json.dumps(rows[0]))
 
 
-def create_project(user_id, created_on, name, memo):
+def create_project(user_id, created_on, name, project_memo):
     with Database() as db:
         db.execute("INSERT INTO projects(user_id, created_on, name, project_memo) VALUES(?, ?, ?, ?)",
-                   user_id, created_on, name, memo)
+                   user_id, created_on, name, project_memo)
+
+
+def edit_project(project_id, name, started_on, ended_on, project_memo):
+    with Database() as db:
+        db.execute("UPDATE projects SET name = ?, started_on = ?, ended_on = ?, project_memo = ? WHERE id = ?", name, started_on, ended_on, project_memo, project_id)
 
 
 def get_project(project_id):

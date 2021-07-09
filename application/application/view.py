@@ -35,6 +35,22 @@ def new_project():
     return redirect("/")
 
 
+@app.route("/edit_project/<project_id>", methods=["GET", "POST"])
+@login_required
+def edit_project(project_id):
+    if request.method == "GET":
+        project = controller.get_project(project_id)
+        return render_template("edit_project.html", project=project)
+    project_name = request.form.get("project_name")
+    starting_date = request.form.get("starting_date")
+    ending_date = request.form.get("ending_date")
+    project_memo = request.form.get("project_memo")
+
+    controller.edit_project(project_id, project_name,
+                            starting_date, ending_date, project_memo)
+    return redirect("/")
+
+
 @app.route("/dashboard/<project_id>", methods=["GET", "POST"])
 @login_required
 def dashboard(project_id):

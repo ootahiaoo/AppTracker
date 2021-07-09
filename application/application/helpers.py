@@ -1,6 +1,5 @@
 from flask import redirect, session
 from functools import wraps
-from datetime import datetime
 
 status = ["Preparing", "Casual meeting", "Sent resume", "1st interview", "2nd interview", "3rd interview",
           "4th interview", "5th interview", "6th interview", "Final interview", "Offer", "Technical test", "Rejected", "Accepted", "On hold"]

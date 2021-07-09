@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Edit Project
+{% endblock %}
+
+{% block main %}
+{% if project %}
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">Edit Project</h3>
+        <div class="card-text card-container">
+            <form action="/edit_project/{{ project.id }}" method="post">
+                <div class="form-group row text-justify">
+                    <label for="projectName" class="col-sm-3 col-form-label">Project name:</label>
+                    <div class="col">
+                        {% if project.name != "" %}
+                        <input name="project_name" type="text" class="form-control" id="projectName"
+                            aria-describedby="projectNameCaption" value="{{ project.name }}">
+                        {% else %}
+                        <input name="project_name" type="text" class="form-control" id="projectName"
+                            aria-describedby="projectNameCaption"
+                            placeholder="Example: 2021 job change, sophomore internship, job hunting abroad...">
+                        {% endif %}
+                        <small id="projectNameCaption" class="form-text text-muted">To help you remember when the job
+                            hunting happened or what it was about.</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="projectCreationDate" class="col-sm-3 col-form-label text-justify">Created on:</label>
+                    <div class="col">
+                        <input name="creation_date" type="text" readonly class="form-control-plaintext"
+                            id="projectCreationDate" value="{{ simplify_date(project.created_on) }}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label text-justify">Started on:</label>
+                    <div class="col-sm-4">
+                        <input name="starting_date" type="date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label text-justify">Ended on:</label>
+                    <div class="col-sm-4">
+                        <input name="ending_date" type="date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row text-justify">
+                    <label for="projectMemo" class="col-sm-3 col-form-label">Memo:</label>
+                    <div class="col">
+                        {% if project.project_memo != "" %}
+                        <textarea name="project_memo" class="form-control" id="projectMemo"
+                            rows="3">{{ project.project_memo }}</textarea>
+                        {% else %}
+                        <textarea name="project_memo" class="form-control" id="projectMemo" rows="3"
+                            placeholder="Example: received 3 offers, had to put on hold, nice experience with several companies..."></textarea>
+                        {% endif %}
+                        <small id="projectMemo" class="form-text text-muted">Anything you want to see about this job
+                            hunting on the projects list.</small>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Edit Project</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

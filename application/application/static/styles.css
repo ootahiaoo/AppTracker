@@ -1,4 +1,5 @@
 /* Common */
+
 body {
     text-align: center;
     padding-bottom: 1em;
@@ -9,16 +10,11 @@ a {
 }
 
 h3 {
-    padding-bottom: 0.8em;
+    padding-bottom: 0.5em;
     letter-spacing: .1em;
     color: #283655;
     font-size: 26px;
     font-weight: bold;
-}
-
-td {
-    width: 20%;
-    word-wrap: break-word;
 }
 
 #navbar_title {
@@ -27,17 +23,13 @@ td {
     font-size: 26px;
     letter-spacing: .1em;
 }
+
 #navbar_title a {
     color: #283655;
     text-decoration: none;
 }
 
-.container {
-    padding-left: 2em;
-    padding-right: 2em;
-}
-
-.btn-primary { 
+.btn-primary {
     background-color: #4D648D;
     border-color: #4D648D;
     color: #fff;
@@ -61,15 +53,32 @@ td {
     box-shadow: none !important;
 }
 
-.card {
-    margin-left: auto;
-    margin-right: auto;
-    width: 70%;
+@media screen and (max-width: 992px) {
+    .card {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0em !important;
+        padding-right: 0em !important;
+        width: 100%;
+    }
+    .card-column {
+        padding-right: 0.7em;
+        padding-left: 0.7em;
+    }
 }
 
-.card-container {
-    padding-left: 2em !important;
-    padding-right: 2em !important;
+@media screen and (min-width: 992px) {
+    .card {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1em !important;
+        padding-right: 1em !important;
+        width: 70%;
+    }
+    .card-column {
+        padding-right: 3em;
+        padding-left: 3em;
+    }
 }
 
 .form-control:focus {
@@ -78,12 +87,6 @@ td {
     border-color: #D0E1F9;
     outline: 0;
     box-shadow: 0 0 0 0.2rem #D0E1F9;
-}
-
-.col-sm {
-    padding-top: 1em;
-    padding-right: 4em;
-    padding-left: 4em;
 }
 
 #login-card {
