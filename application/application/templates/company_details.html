@@ -1,0 +1,33 @@
+{% extends "layout.html" %} {% block title %} Company Details {% endblock %} {% block main %} {% if company %}
+
+<h3 class="text-break">History with {{ company.company_name}}</h3>
+<!-- Display memo? Edit memo? -->
+{% if history %}
+
+<div class="container mt-3">
+    <table class="table table-responsive table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="col-3">Project</th>
+                <th class="col-3">Role</th>
+                <th class="col-2">Final Stage</th>
+                <th class="col-1">Date</th>
+                <th class="col-2">Application Memo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in history %}
+            <tr>
+                <td class="col-3"><a href="/dashboard_{{ row.project_id}}">{% if row.project_name == "" %}n/a{% else
+                        %}{{ row.project_name }}{% endif%}</a></td>
+                <td class="col-3"><a href="/application_details_{{ row.id }}">{{ row.role }}</a></td>
+                <td class="col-2">{{ row.stage }}</td>
+                <td class="col-1">{% if row.date == "" %}n/a{% else %}{{ row.date }}{% endif %}</td>
+                <td class="col-2 memo">{% if row.application_memo == "" %}n/a{% else %}{{ row.application_memo }}{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %} {% endif %} {% endblock %}

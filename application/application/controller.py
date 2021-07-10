@@ -38,6 +38,14 @@ def get_company_id(company_name):
     return model.get_company_id(company_name)
 
 
+def get_company(company_id):
+    return model.get_company(company_id)
+
+
+def search_company(company_name):
+    return model.search_company(company_name)
+
+
 def create_application(project_id, company_id, role, memo, rank, application_status, datetime):
     # TODO: handle error, return response
     model.create_application(project_id, company_id, role, memo, rank)
@@ -45,16 +53,27 @@ def create_application(project_id, company_id, role, memo, rank, application_sta
     create_stage(application_id, application_status, datetime)
 
 
-def get_application(project_id, company_id):
-    return model.get_application(project_id, company_id)
+def get_simple_application(application_id):
+    return model.get_simple_application(application_id)
 
 
 def get_application_id(project_id, company_id):
     return model.get_application_id(project_id, company_id)
 
+def get_application(application_id):
+    return model.get_application(application_id)
+
 
 def get_all_applications(project_id):
     return model.get_all_applications(project_id)
+
+
+def get_company_history(company_id):
+    return model.get_company_history(company_id)
+
+
+def edit_application(application_id, role, rank, memo):
+    model.edit_application(application_id, role, rank, memo)
 
 
 def create_stage(application_id, status, datetime, memo=""):

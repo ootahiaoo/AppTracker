@@ -38,20 +38,39 @@ h3 {
     padding-right: 1em;
     padding-left: 1em;
     box-shadow: none !important;
-    border: 0 !important;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-outline-primary:hover {
     background-color: #283655 !important;
-    border: 0 !important;
+    border-color: #283655 !important;
     box-shadow: none !important;
 }
 
-.btn-primary:focus {
+.btn-primary:focus,
+.btn-outline-primary:focus {
     background-color: #283655 !important;
-    border: 0 !important;
+    border-color: #283655 !important;
+    color: #fff;
     box-shadow: none !important;
 }
+
+.btn-outline-primary {
+    border-color: #4D648D;
+    color: #4D648D;
+    letter-spacing: .1em;
+    padding: 0.3em;
+    padding-right: 1em;
+    padding-left: 1em;
+}
+
+thead {
+    /* Bootstrap's "bg-light" value, to match the header */
+    background-color: #f8f9fa !important;
+}
+
+
+/* https://stackoverflow.com/questions/19592968/bootstrap-3-breakpoints-and-media-queries */
 
 @media screen and (max-width: 992px) {
     .card {
@@ -64,6 +83,12 @@ h3 {
     .card-column {
         padding-right: 0.7em;
         padding-left: 0.7em;
+    }
+    .memo {
+        max-width: 120px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -78,6 +103,10 @@ h3 {
     .card-column {
         padding-right: 3em;
         padding-left: 3em;
+    }
+    .memo {
+        word-wrap: break-word;
+        word-break: break-word;
     }
 }
 

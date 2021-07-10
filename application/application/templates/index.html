@@ -5,7 +5,7 @@
 
     <div class="form-group">
         <form action="/new_project" method="get">
-            <button class="btn btn-primary" type="submit">New Project</button>
+            <button class="btn btn-primary btn-sm" type="submit">New Project</button>
         </form>
     </div>
 
@@ -17,7 +17,7 @@
                 <th class="col-1">Creation Date</th>
                 <th class="col-1">Starting Date</th>
                 <th class="col-1">Ending Date</th>
-                <th class="col-3">Memo</th>
+                <th class="col-3 memo">Memo</th>
                 <th class="col-1"></th>
             </tr>
         </thead>
@@ -28,7 +28,7 @@
                 <td class="col-1">{{ simplify_date(row.created_on) }}</td>
                 <td class="col-1">{% if row.started_on == ""%}n/a{% else %}{{ row.started_on }}{% endif %}</td>
                 <td class="col-1">{% if row.ended_on == "" %}n/a{% else %}{{ row.ended_on }}{% endif %}</td>
-                <td class="col-3">{% if row.project_memo == ""%}n/a{% else %}{{ row.project_memo }}{% endif %}</td>
+                <td class="col-3 memo">{% if row.project_memo == ""%}n/a{% else %}{{ row.project_memo }}{% endif %}</td>
                 <td class="col-1">
                     <a href="/edit_project_{{ row.id }}"><img alt="Edit project" src="static/pencil.svg"></a>
                 </td>

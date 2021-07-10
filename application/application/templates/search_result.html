@@ -1,0 +1,12 @@
+{% extends "layout.html" %} {% block title %} Search Result {% endblock %} {% block main %}
+
+<h3 class="text-break">Search result for: {{ keyword }}</h3>
+
+{% if results %}
+<ul class="list-group list-group-flush">
+    {% for row in results %}
+    <li class="list-group-item"><span class="text-break"><a href="/company_{{ row.id }}">{{ row.company_name }}</a></span></li>
+    {% endfor %}
+</ul>
+{% else %}
+<span>No result</span> {% endif %} {% endblock %}

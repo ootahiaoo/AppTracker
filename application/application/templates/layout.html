@@ -22,7 +22,7 @@
     <nav class="navbar navbar-expand-md navbar-light bg-light border">
 
         <span id="navbar_title"><a href="/">AppTracker</a></span> {% if session.user_id %}
-        <form id="navbar_search_form" method="post">
+        <form action="/search" id="navbar_search_form" method="post">
             <div class="input-group input-group-sm mb3">
                 <input class="form-control" id="search_form_input" placeholder="Company name" type="text" name="q" autocomplete="off" autocapitalize="none" autocorrect="off">
                 <div class="input-group-append">

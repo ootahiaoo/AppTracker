@@ -1,10 +1,10 @@
 {% extends "layout.html" %} {% block title %} Dashboard {% endblock %} {% block main %}
 <div class="container">
     {% if project %}
-    <h3>Dashboard for: {{ project.name }}</h3>
+    <h3 class="text-break">Dashboard for project: {{ project.name }}</h3>
     <div class="form-group">
         <form action="/new_application_{{ project.id }}" method="get">
-            <button class="btn btn-primary" type="submit">Add</button>
+            <button class="btn btn-primary btn-sm" type="submit">New Application</button>
         </form>
     </div>
 
@@ -17,7 +17,7 @@
                 <th class="col-3">Role</th>
                 <th class="col-2">Stage</th>
                 <th class="col-1">Date</th>
-                <th class="col-2">Memo</th>
+                <th class="col-2 memo">Memo</th>
             </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
                 <td class="col-3"><a href="/application_details_{{ row.id }}">{{ row.role }}</a></td>
                 <td class="col-2">{{ row.stage }}</td>
                 <td class="col-1">{% if row.date == "" %}n/a{% else %}{{ row.date }}{% endif %}</td>
-                <td class="col-2">{% if row.application_memo == "" %}n/a{% else %}{{ row.application_memo }}{% endif %}
+                <td class="col-2 memo">{% if row.application_memo == "" %}n/a{% else %}{{ row.application_memo }}{% endif %}
                 </td>
             </tr>
             {% endfor %}

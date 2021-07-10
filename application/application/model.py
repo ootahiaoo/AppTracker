@@ -36,9 +36,10 @@ class Project(object):
 
 
 class Application(object):
-    def __init__(self, id, project_id, company_id, role, application_memo, rank, company_name, type, date):
+    def __init__(self, id, project_id, name, company_id, role, application_memo, rank, company_name, type, date):
         self.id = id
         self.project_id = project_id
+        self.project_name = name
         self.company_id = company_id
         self.role = role
         self.application_memo = application_memo
@@ -61,6 +62,18 @@ class Stage(object):
         self.date = date
         self.type = type
         self.stage_memo = stage_memo
+
+    @classmethod
+    def from_json(cls, json_string):
+        json_dict = json.loads(json_string)
+        return cls(**json_dict)
+
+
+class Company(object):
+    def __init__(self, id, company_name, company_memo):
+        self.id = id
+        self.company_name = company_name
+        self.company_memo = company_memo
 
     @classmethod
     def from_json(cls, json_string):
@@ -146,7 +159,11 @@ def search_company(company_name):
             "SELECT * FROM company WHERE company_name LIKE ?", "%" + company_name + "%")
     if len(rows) == 0:
         return None
-    return rows
+    companies = []
+    for row in rows:
+        company = Company.from_json(json.dumps(row))
+        companies.append(company)
+    return companies
 
 
 def get_company_id(company_name):
@@ -158,19 +175,28 @@ def get_company_id(company_name):
     return rows[0]["id"]
 
 
+def get_company(company_id):
+    with Database() as db:
+        rows = db.execute(
+            "SELECT * FROM company WHERE id = ?", company_id)
+    if len(rows) == 0:
+        return None
+    return Company.from_json(json.dumps(rows[0]))
+
+
 def create_application(project_id, company_id, role, memo, rank):
     with Database() as db:
         db.execute("INSERT INTO applications(project_id, company_id, role, application_memo, rank) VALUES(?, ?, ?, ?, ?)",
                    project_id, company_id, role, memo, rank)
 
 
-def get_application(project_id, company_id):
+def get_simple_application(application_id):
     with Database() as db:
         rows = db.execute(
-            "SELECT * FROM applications WHERE project_id = ? AND company_id = ?", project_id, company_id)
+            "SELECT company_name, role, application_memo FROM applications JOIN company ON company.id = applications.company_id WHERE applications.id = ?", application_id)
     if len(rows) == 0:
         return None
-    return Application.from_json(json.dumps(rows[0]))
+    return rows[0]
 
 
 def get_application_id(project_id, company_id):
@@ -182,10 +208,18 @@ def get_application_id(project_id, company_id):
     return rows[0]["id"]
 
 
+def get_application(application_id):
+    with Database() as db:
+        rows = db.execute("SELECT id, project_id, name, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id JOIN projects ON projects.id = applications.project_id GROUP BY applications.id) WHERE id = ?", application_id)
+    if len(rows) == 0:
+        return None
+    return Application.from_json(json.dumps(rows[0]))
+
+
 def get_all_applications(project_id):
     with Database() as db:
         rows = db.execute(
-            "SELECT id, project_id, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id ORDER BY stage.id DESC) WHERE project_id = ? GROUP BY application_id ORDER BY rank", project_id)
+            "SELECT id, project_id, name, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id JOIN projects ON projects.id = applications.project_id ORDER BY stage.id DESC) WHERE project_id = ? GROUP BY application_id ORDER BY rank", project_id)
     if len(rows) == 0:
         return None
     applications = []
@@ -195,10 +229,29 @@ def get_all_applications(project_id):
     return applications
 
 
+def get_company_history(company_id):
+    with Database() as db:
+        rows = db.execute("SELECT id, project_id, name, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id JOIN projects ON projects.id = applications.project_id ORDER BY stage.id DESC) WHERE company_id = ? GROUP BY project_id", company_id)
+    if len(rows) == 0:
+        return None
+    applications = []
+    for row in rows:
+        application = Application.from_json(json.dumps(row))
+        applications.append(application)
+    return applications
+
+
+def edit_application(application_id, role, rank, memo):
+    with Database() as db:
+        db.execute("UPDATE applications SET role = ?, rank = ?, application_memo = ? WHERE id = ?",
+                   role, rank, memo, application_id)
+
+
 def create_stage(application_id, status, datetime, stage_memo):
     with Database() as db:
         db.execute(
-            "INSERT INTO stage (application_id, type, date, stage_memo) VALUES(?, ?, ?, ?)", application_id, status, datetime, stage_memo)
+            "INSERT INTO stage (application_id, type, date, stage_memo) VALUES(?, ?, ?, ?)",
+            application_id, status, datetime, stage_memo)
 
 
 def get_stage(stage_id):

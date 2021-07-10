@@ -96,9 +96,25 @@ def new_application(project_id):
 @app.route("/application_details_<application_id>", methods=["GET", "POST"])
 @login_required
 def application_details(application_id):
+    # TODO: merge requests?
+    application = controller.get_simple_application(application_id)
     stages = controller.get_process(application_id)
+    return render_template("application_details.html", application_id=application_id, application=application, stages=stages)
 
-    return render_template("application_details.html", application_id=application_id, stages=stages)
+
+@app.route("/edit_application_<application_id>", methods=["GET", "POST"])
+@login_required
+def edit_application(application_id):
+    application = controller.get_application(application_id)
+    if request.method == "GET":
+        return render_template("edit_application.html", application=application)
+    
+    role = request.form.get("role_name")
+    rank = request.form.get("application_rank")
+    memo = request.form.get("application_memo")
+
+    controller.edit_application(application_id, role, rank, memo)
+    return application_details(application_id)
 
 
 @app.route("/new_stage_<application_id>", methods=["GET", "POST"])
@@ -146,8 +162,19 @@ def edit_stage(stage_id):
 
 
 @app.route("/company_<company_id>", methods=["GET", "POST"])
+@login_required
 def company_details(company_id):
-    return redirect("/")
+    company = controller.get_company(company_id)
+    history = controller.get_company_history(company_id)
+    return render_template("company_details.html", company=company, history=history)
+
+
+@app.route("/search", methods=["POST"])
+@login_required
+def search():
+    keyword = request.form.get("q")
+    results = controller.search_company(keyword)
+    return render_template("search_result.html", keyword=keyword, results=results)
 
 
 @app.route("/login", methods=["GET", "POST"])
