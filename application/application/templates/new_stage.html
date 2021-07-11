@@ -3,38 +3,37 @@
     <div class="card-body">
         <h3 class="card-title">Add An Interview Stage</h3>
         <div class="card-text card-container">
-            <form action="/new_stage_{{ application_id }}" method="post">
+            <form action="/new_stage_{{ application_id }}" method="post" id="new-stage-form" class="needs-validation">
                 <div class="form-group row text-justify">
-                    <label for="stageType" class="col-sm-3 col-form-label">Stage:</label>
+                    <label for="default-status" class="col-sm-3 col-form-label">Stage:</label>
                     <div class="col">
-                        <select class="form-control mb-2" name="stage_status">
+                        <select class="form-control mb-2" id="default-status" name="default-status">
                             <option disabled selected value="">Default list</option>
                             {% for stage in stages %}
                             <option>{{ stage }}</option>
                             {% endfor %}
                         </select>
-                        <input name="custom_status" type="text" class="form-control" id="stageType" aria-describedby="stageTypeCaption" placeholder="Custom status">
-                        <small id="stageTypeCaption" class="form-text text-muted">Choose in the default list or set a
-                            custom status.</small>
+                        <input class="form-control" id="stage-type" name="custom-status" type="text" maxlength="50" aria-describedby="stage-type-caption" placeholder="Custom status">
+                        <small class="form-text text-muted" id="stage-type-caption">Choose in the default list or set a custom status.</small>
                     </div>
                 </div>
 
                 <div class="form-group row text-justify">
                     <label class="col-sm-3 col-form-label">Date & Time:</label>
-                    <div class="col-sm-4 mb-2">
-                        <input name="stage_date" type="date" class="form-control">
+                    <div for="stage-date" class="col-sm-4 mb-2">
+                        <input class="form-control" id="stage-date" name="stage-date" type="date">
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" name="stage_time" placeholder="HH:MM">
+                        <input class="form-control" id="stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
+                        <div class="invalid-feedback">Please use the format HH:MM.</div>
                     </div>
                 </div>
 
                 <div class="form-group row text-justify">
-                    <label for="stageMemo" class="col-sm-3 col-form-label">Memo:</label>
+                    <label for="stage-memo" class="col-sm-3 col-form-label">Memo:</label>
                     <div class="col">
-                        <textarea name="stage_memo" class="form-control" id="stageMemo" rows="3"></textarea>
-                        <small id="stageMemo" class="form-text text-muted">Example: interviewer names, things that you
-                            need to prepare, etc.</small>
+                        <textarea class="form-control" id="stage-memo" name="stage-memo" aria-describedby="stage-memo-caption" rows="3" maxlength="300"></textarea>
+                        <small class="form-text text-muted" id="stage-memo-caption">Example: interviewer names, things that you need to prepare, etc.</small>
                     </div>
                 </div>
 
@@ -43,4 +42,36 @@
         </div>
     </div>
 </div>
-{% endif %} {% endblock %}
+{% endif %} {% endblock %} {% block javascript %}
+<script>
+    $(document).ready(function() {
+
+        $('#new-stage-form').submit(function(event) {
+            if (checkTimeFormat() === false) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $('#stage-time').on('change', function(event) {
+            checkTimeFormat();
+        });
+    });
+
+    function checkTimeFormat() {
+        var input = $('#stage-time').val();
+        if (input == "" || checkTimeRegex(input)) {
+            $('#stage-time').removeClass('is-invalid');
+            return true;
+        }
+        $('#stage-time').addClass('is-invalid');
+        return false;
+    }
+
+    // https://adamprescott.net/2014/01/08/validate-time-entry-with-javascript/
+    function checkTimeRegex(time) {
+        var regex = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
+        return time.match(regex);
+    }
+</script>
+{% endblock %}

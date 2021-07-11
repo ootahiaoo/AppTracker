@@ -165,6 +165,12 @@ def search_company(company_name):
         companies.append(company)
     return companies
 
+def search_company_js(company_name):
+    with Database() as db:
+        rows = db.execute(
+            "SELECT * FROM company WHERE company_name LIKE ?", "%" + company_name + "%")
+        return json.dumps(rows)
+
 
 def get_company_id(company_name):
     with Database() as db:

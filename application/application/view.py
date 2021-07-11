@@ -1,5 +1,5 @@
 from application import app, controller
-from application.helpers import check_characters, login_required, status, error, display_error, check_length, string_length
+from application.helpers import check_characters, is_rank_format, is_time_format, login_required, status, error, display_error, check_length, length_pattern, set_empty_response
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -11,10 +11,8 @@ from datetime import datetime
 def index():
     user = controller.get_user_by_id(session["user_id"])
     if not user:
-        return "error"
-
+        return error(6, 404)
     projects = controller.get_all_projects(session["user_id"])
-
     return render_template("index.html", name=user.username, projects=projects)
 
 
@@ -24,8 +22,12 @@ def new_project():
     if request.method == "GET":
         return render_template("new_project.html")
 
-    project_name = request.form.get("project_name")
-    project_memo = request.form.get("project_memo")
+    project_name = set_empty_response("project-name")
+    project_memo = set_empty_response("project-memo")
+
+    if (check_length(project_name, length_pattern["project_name"])
+            and check_length(project_memo, length_pattern["memo"])) == False:
+        return error(5)
 
     created_on = datetime.now().strftime('%d-%m-%Y %H:%M')
 
@@ -40,11 +42,18 @@ def new_project():
 def edit_project(project_id):
     if request.method == "GET":
         project = controller.get_project(project_id)
+        if not project:
+            return error(6, 404)
         return render_template("edit_project.html", project=project)
-    project_name = request.form.get("project_name")
-    starting_date = request.form.get("starting_date")
-    ending_date = request.form.get("ending_date")
-    project_memo = request.form.get("project_memo")
+
+    project_name = set_empty_response("project-name")
+    starting_date = set_empty_response("starting-date")
+    ending_date = set_empty_response("ending-date")
+    project_memo = set_empty_response("project-memo")
+
+    if (check_length(project_name, length_pattern["project_name"])
+            and check_length(project_memo, length_pattern["memo"])) == False:
+        return error(5)
 
     controller.edit_project(project_id, project_name,
                             starting_date, ending_date, project_memo)
@@ -66,26 +75,43 @@ def new_application(project_id):
     if request.method == "GET":
         return render_template("new_application.html", project_id=project_id, stages=status)
 
-    # TODO: check input
-    company_name = request.form.get("company_name")
+    company_name = request.form.get("company-name")
     role = request.form.get("role")
-    memo = request.form.get("application_memo")
-    application_status = request.form.get("application_status")
+    rank = request.form.get("application-rank")
+    if not company_name or not role or not rank:
+        return error(7)
+
+    date = request.form.get("status-date")
+    time = request.form.get("status-time")
+    memo = set_empty_response("application-memo")
+    application_status = request.form.get("default-status")
     if not application_status:
-        application_status = request.form.get("custom_status")
+        application_status = set_empty_response("custom-status")
 
-    date = request.form.get("status_date")
-    time = request.form.get("status_time")
-    datetime = date + " " + time
+    if not date or not time:
+        datetime = ""
+    else:
+        if is_time_format(time) == False:
+            return error(8)
+        datetime = date + " " + time
 
-    rank = request.form.get("application_rank")
-    if not company_name or not role:
-        return "must provide a company name and a role"
+    if (check_length(company_name, length_pattern["company_name"])
+        and check_length(role, length_pattern["role"])
+        and check_length(memo, length_pattern["memo"])
+        and check_length(application_status, length_pattern["stage"])
+        and check_length(rank, length_pattern["rank"])
+            and check_length(datetime, length_pattern["datetime"])) == False:
+        return error(5)
 
-    # TODO: check if company already exists
-    # if yes, use that id
-    controller.create_company(company_name)
-    company_id = controller.get_company_id(company_name)
+    if is_rank_format(rank) == False:
+        return error(10)
+
+    company = controller.search_company(company_name)
+    if not company:
+        controller.create_company(company_name)
+        company_id = controller.get_company_id(company_name)
+    else:
+        company_id = company[0].id
 
     controller.create_application(
         project_id, company_id, role, memo, rank, application_status, datetime)
@@ -109,9 +135,19 @@ def edit_application(application_id):
     if request.method == "GET":
         return render_template("edit_application.html", application=application)
 
-    role = request.form.get("role_name")
-    rank = request.form.get("application_rank")
-    memo = request.form.get("application_memo")
+    role = request.form.get("role-name")
+    rank = request.form.get("application-rank")
+    if not role or not rank:
+        return error(9)
+    memo = set_empty_response("application-memo")
+
+    if (check_length(role, length_pattern["role"])
+        and check_length(rank, length_pattern["rank"])
+            and check_length(memo, length_pattern["memo"])) == False:
+        return error(5)
+
+    if is_rank_format(rank) == False:
+        return error(10)
 
     controller.edit_application(application_id, role, rank, memo)
     return application_details(application_id)
@@ -122,16 +158,26 @@ def edit_application(application_id):
 def add_stage(application_id):
     if request.method == "GET":
         return render_template("new_stage.html", application_id=application_id, stages=status)
-    type = request.form.get("stage_status")
+
+    date = request.form.get("stage-date")
+    time = request.form.get("stage-time")
+    stage_memo = set_empty_response("stage-memo")
+    type = request.form.get("default-status")
     if not type:
-        type = request.form.get("custom_status")
-    date = request.form.get("stage_date")
-    time = request.form.get("stage_time")
+        type = set_empty_response("custom-status")
+
     if not date or not time:
         datetime = ""
     else:
+        if is_time_format(time) == False:
+            return error(8)
         datetime = date + " " + time
-    stage_memo = request.form.get("stage_memo")
+
+    if (check_length(datetime, length_pattern["datetime"])
+        and check_length(stage_memo, length_pattern["memo"])
+            and check_length(type, length_pattern["stage"])) == False:
+        return error(5)
+
     controller.create_stage(application_id, type, datetime, stage_memo)
 
     return application_details(application_id)
@@ -144,18 +190,25 @@ def edit_stage(stage_id):
     if request.method == "GET":
         return render_template("edit_stage.html", stage=stage)
 
-    type = request.form.get("stage_status")
+    date = request.form.get("stage-date")
+    time = request.form.get("stage-time")
+    stage_memo = set_empty_response("stage_memo")
+    type = request.form.get("default-status")
     if not type:
-        type = request.form.get("custom_status")
-    date = request.form.get("stage_date")
-    time = request.form.get("stage_time")
+        type = set_empty_response("custom-status")
+    
     if not date or not time:
         datetime = ""
     else:
+        if is_time_format(time) == False:
+            return error(8)
         datetime = date + " " + time
-    stage_memo = request.form.get("stage_memo")
-    if not stage_memo:
-        stage_memo = ""
+
+    if (check_length(datetime, length_pattern["datetime"])
+        and check_length(stage_memo, length_pattern["memo"])
+            and check_length(type, length_pattern["stage"])) == False:
+        return error(5)
+    
     controller.edit_stage(stage_id, type, datetime, stage_memo)
 
     return application_details(stage.application_id)
@@ -190,8 +243,8 @@ def login():
     if check_characters([username, password]) == False:
         return error(0)
 
-    if (check_length(len(username), string_length["username"]) == False
-            or check_length(len(password), string_length["password"]) == False):
+    if (check_length(username, length_pattern["username"])
+            and check_length(password, length_pattern["password"])) == False:
         return error(5)
 
     user = controller.get_user_by_username(username)
@@ -214,9 +267,9 @@ def register():
     if check_characters([username, password, confirmation]) == False:
         return error(0)
 
-    if (check_length(len(username), string_length["username"]) == False
-        or check_length(len(password), string_length["password"]) == False
-            or check_length(len(confirmation), string_length["password"]) == False):
+    if (check_length(username, length_pattern["username"])
+        and check_length(password, length_pattern["password"])
+            and check_length(confirmation, length_pattern["password"])) == False:
         return error(5)
 
     if password != confirmation:
@@ -241,6 +294,12 @@ def check_username_availability(username):
     if value != None:
         return "Not available"
     return "Available"
+
+
+@app.route("/check_existing_<company_name>", methods=["POST"])
+def check_existing_company(company_name):
+    """ Used by Javascript when creating new application """
+    return controller.search_company_js(company_name)
 
 
 @app.route("/logout")

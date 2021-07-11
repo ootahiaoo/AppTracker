@@ -5,7 +5,7 @@
         <div class="card-text">
             <div class="row">
                 <div class="col col-md-6 card-column" id="login-card">
-                    <form class="needs-validation" id="login-form" action="/login" method="post">
+                    <form action="/login" method="post" class="needs-validation" id="login-form">
                         <div class="form-group text-justify">
                             <label for="username-login">Username:</label>
                             <input class="form-control" name="username-login" type="text" minlength="3" maxlength="20" required>
@@ -18,20 +18,20 @@
                     </form>
                 </div>
                 <div class="col col-md-6 card-column">
-                    <form class="needs-validation" id="register-form" action="/register" method="post">
+                    <form action="/register" method="post" class="needs-validation" id="register-form">
                         <div class="form-group text-justify">
                             <label for="username-register">Username:</label>
-                            <input class="form-control" name="username-register" id="username-register" type="text" minlength="3" maxlength="20" required>
+                            <input class="form-control" id="username-register" name="username-register" type="text" minlength="3" maxlength="20" required>
                             <div class="invalid-feedback">This username is already used.</div>
                         </div>
                         <div class="form-group text-justify">
                             <label for="password-register">Password:</label>
-                            <input class="form-control" name="password-register" id="password-register" type="password" minlength="6" maxlength="30" required>
+                            <input class="form-control" id="password-register" name="password-register" type="password" minlength="6" maxlength="30" required>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group text-justify">
                             <label for="confirmation-register">Confirm Password:</label>
-                            <input class="form-control" name="confirmation-register" id="confirmation-register" type="password" maxlength="30" required>
+                            <input class="form-control" id="confirmation-register" name="confirmation-register" type="password" maxlength="30" required>
                             <div class="invalid-feedback">The confirmation doesn't match the password.
                             </div>
                         </div>

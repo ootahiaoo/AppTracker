@@ -46,6 +46,10 @@ def search_company(company_name):
     return model.search_company(company_name)
 
 
+def search_company_js(company_name):
+    return model.search_company_js(company_name)
+
+
 def create_application(project_id, company_id, role, memo, rank, application_status, datetime):
     # TODO: handle error, return response
     model.create_application(project_id, company_id, role, memo, rank)

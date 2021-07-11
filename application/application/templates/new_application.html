@@ -3,21 +3,22 @@
     <div class="card-body">
         <h3 class="card-title">Add An Application</h3>
         <div class="card-text card-container">
-            <form action="/new_application_{{ project_id }}" method="post">
+            <form action="/new_application_{{ project_id }}" id="new-application-form" method="post" class="needs-validation">
                 <div class="form-row">
                     <div class="form-group col-md-6 text-justify">
-                        <label for="inputCompanyName">Company name:</label>
-                        <input type="text" class="form-control" id="inputCompanyName" name="company_name">
+                        <label for="company-name">Company name:</label>
+                        <datalist id="company-suggestion"></datalist>
+                        <input class="form-control" id="company-name" name="company-name" type="text" list="company-suggestion" minlength="1" maxlength="50" required>
                     </div>
                     <div class="form-group col-md-6 text-justify">
-                        <label for="inputRole">Role:</label>
-                        <input type="text" class="form-control" id="inputRole" name="role">
+                        <label for="input-role">Role:</label>
+                        <input class="form-control" id="input-role" name="role" type="text" minlength="1" maxlength="50" required>
                     </div>
                 </div>
                 <div class="form-row align-items-end">
                     <div class="form-group col-md-5 text-justify">
-                        <label for="applicationStatusList">Application status:</label>
-                        <select class="form-control" id="applicationStatusList" name="application_status">
+                        <label for="default-status">Application status:</label>
+                        <select class="form-control" id="default-status" name="default-status">
                             <option disabled selected value="">Choose in the list</option>
                             {% for stage in stages %}
                             <option>{{ stage }}</option>
@@ -26,33 +27,34 @@
                     </div>
                     <div class="form-group col-md-1 pb-2"><span>or</span></div>
                     <div class="form-group col-md-6">
-                        <input type="text" class="form-control" id="customStatus" name="custom_status" placeholder="Use a custom status">
+                        <input class="form-control" id="custom-status" name="custom-status" type="text" maxlength="50" placeholder="Use a custom status">
                     </div>
                 </div>
 
                 <div class="form-row justify-content-between pt-2">
                     <div class="form-group col-5 align-items-end">
                         <div class="form-group text-justify">
-                            <label for="applicationDate">Date & Time:</label>
-                            <input type="date" class="form-control" name="status_date">
+                            <label for="status-date">Date & Time:</label>
+                            <input class="form-control" id="status-date" name="status-date" type="date">
                         </div>
                         <div class="form-group text-justify">
-                            <input type="text" class="form-control" name="status_time" placeholder="HH:MM">
+                            <input class="form-control" id="status-time" name="status-time" type="text" maxlength="5" placeholder="HH:MM">
+                            <div class="invalid-feedback">Please use the format HH:MM.</div>
                         </div>
                     </div>
                     <div class="form-group col-4 text-justify">
-                        <label for="applicationRank">Rank:</label>
-                        <input type="number" class="form-control" id="applicationRank" name="application_rank" min="1" step="1">
-                        <small id="applicationRank" class="form-text text-muted">How you rank this application in your
-                            top. Can be the same as another application.</small>
+                        <label for="application-rank">Rank:</label>
+                        <input class="form-control" id="application-rank" name="application-rank" type="number" aria-describedby="application-rank-caption" maxlength="3" min="1" max="100" step="1" required>
+                        <small class="form-text text-muted" id="application-rank-caption">How you rank this application
+                            in your top. Can be the same as another application.</small>
                     </div>
                 </div>
 
                 <div class="form-group text-justify">
-                    <label for="applicationMemo">Memo:</label>
-                    <textarea name="application_memo" class="form-control" id="applicationMemo" rows="3" placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>
-                    <small id="applicationMemo" class="form-text text-muted">Anything you want to remember about
-                        this application on the projects list.</small>
+                    <label for="application-memo">Memo:</label>
+                    <textarea class="form-control" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption" placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>
+                    <small class="form-text text-muted" id="application-memo-caption">Anything you want to remember
+                        about this application on the projects list.</small>
                 </div>
 
                 <button class="btn btn-primary" type="submit">Create</button>
@@ -60,4 +62,61 @@
         </div>
     </div>
 </div>
-{% endif %} {% endblock %}
+{% endif %} {% endblock %} {% block javascript %}
+
+<script>
+    $(document).ready(function() {
+
+        $('#new-application-form').submit(function(event) {
+            if (checkTimeFormat() === false) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $('#status-time').on('change', function(event) {
+            checkTimeFormat();
+        });
+
+        $('#company-name').on('input', function(event) {
+            if ($(this).val() != "") {
+                checkIfCompanyExists();
+            }
+        });
+    });
+
+    function checkTimeFormat() {
+        var input = $('#status-time').val();
+        if (input == "" || checkTimeRegex(input)) {
+            $('#status-time').removeClass('is-invalid');
+            return true;
+        }
+        $('#status-time').addClass('is-invalid');
+        return false;
+    }
+
+    // https://adamprescott.net/2014/01/08/validate-time-entry-with-javascript/
+    function checkTimeRegex(time) {
+        var regex = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
+        return time.match(regex);
+    }
+
+    function checkIfCompanyExists() {
+        var name = $('#company-name').val()
+        var ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function() {
+            if (ajax.readyState === 4 && ajax.status === 200) {
+                var response = JSON.parse(ajax.response)
+                $('#company-suggestion').empty();
+                if (response != null) {
+                    response.forEach(function(item) {
+                        $('#company-suggestion').append(new Option(item["company_name"]))
+                    });
+                }
+            }
+        };
+        ajax.open("POST", "/check_existing_" + name, true);
+        ajax.send();
+    }
+</script>
+{% endblock %}
