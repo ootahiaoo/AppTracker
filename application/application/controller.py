@@ -60,6 +60,7 @@ def get_simple_application(application_id):
 def get_application_id(project_id, company_id):
     return model.get_application_id(project_id, company_id)
 
+
 def get_application(application_id):
     return model.get_application(application_id)
 

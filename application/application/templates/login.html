@@ -5,26 +5,35 @@
         <div class="card-text">
             <div class="row">
                 <div class="col col-md-6 card-column" id="login-card">
-                    <form action="/login" method="post">
-                        <div class="form-group">
-                            <input autocomplete="off" class="form-control" name="username" placeholder="Username" type="text">
+                    <form class="needs-validation" id="login-form" action="/login" method="post">
+                        <div class="form-group text-justify">
+                            <label for="username-login">Username:</label>
+                            <input class="form-control" name="username-login" type="text" minlength="3" maxlength="20" required>
                         </div>
-                        <div class="form-group">
-                            <input class="form-control" name="password" placeholder="Password" type="password">
+                        <div class="form-group text-justify">
+                            <label for="password-login">Password:</label>
+                            <input class="form-control" name="password-login" type="password" maxlength="30" required>
                         </div>
                         <button class="btn btn-primary" type="submit">Log In</button>
                     </form>
                 </div>
                 <div class="col col-md-6 card-column">
-                    <form action="/register" method="post">
-                        <div class="form-group">
-                            <input autocomplete="off" class="form-control" name="username_register" placeholder="Username" type="text">
+                    <form class="needs-validation" id="register-form" action="/register" method="post">
+                        <div class="form-group text-justify">
+                            <label for="username-register">Username:</label>
+                            <input class="form-control" name="username-register" id="username-register" type="text" minlength="3" maxlength="20" required>
+                            <div class="invalid-feedback">This username is already used.</div>
                         </div>
-                        <div class="form-group">
-                            <input class="form-control" name="password_register" placeholder="Password" type="password">
+                        <div class="form-group text-justify">
+                            <label for="password-register">Password:</label>
+                            <input class="form-control" name="password-register" id="password-register" type="password" minlength="6" maxlength="30" required>
+                            <div class="invalid-feedback"></div>
                         </div>
-                        <div class="form-group">
-                            <input class="form-control custom-primary" name="confirmation_register" placeholder="Confirm Password" type="password">
+                        <div class="form-group text-justify">
+                            <label for="confirmation-register">Confirm Password:</label>
+                            <input class="form-control" name="confirmation-register" id="confirmation-register" type="password" maxlength="30" required>
+                            <div class="invalid-feedback">The confirmation doesn't match the password.
+                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit">Register</button>
                     </form>
@@ -34,4 +43,75 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %} {% block javascript %}
+<script>
+    $(document).ready(function() {
+        $('#register-form').submit(function(event) {
+            if (checkUsernameAvailability() === false || checkPasswordConfirmation() === false) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $('#register-form :input, #login-form :input').each(function() {
+            $(this).on('input', function(event) {
+                if (checkCharacters($(this).val()) === false) {
+                    this.setCustomValidity("May only use underscore, dash or alphanumeric characters.");
+                } else {
+                    this.setCustomValidity('');
+                }
+                this.reportValidity();
+            });
+        });
+
+        $('#confirmation-register').on('change', function(event) {
+            var input = $('#confirmation-register').val();
+            if (input != "" && checkCharacters(input)) {
+                checkPasswordConfirmation();
+            } else {
+                $('#confirmation-register').removeClass('is-invalid');
+            }
+        });
+
+        $('#username-register').on('change', function(event) {
+            var input = $('#username-register').val();
+            if (input != "" && checkCharacters(input)) {
+                checkUsernameAvailability()
+            } else {
+                $('#username-register').removeClass('is-invalid');
+            }
+        });
+
+    });
+
+    function checkCharacters(text) {
+        var regex = '^[a-zA-Z0-9_-]*$'
+        var constraint = new RegExp(regex, 'i')
+        return constraint.test(text)
+    }
+
+    function checkPasswordConfirmation() {
+        if ($('#password-register').val() != $('#confirmation-register').val()) {
+            $('#confirmation-register').addClass('is-invalid');
+            return false;
+        }
+        $('#confirmation-register').removeClass('is-invalid');
+        return true;
+    }
+
+    function checkUsernameAvailability() {
+        var name = $('#username-register').val()
+        var ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function() {
+            if (ajax.readyState === 4 && ajax.status == 200) {
+                if (ajax.responseText === "Not available") {
+                    $('#username-register').addClass('is-invalid');
+                } else {
+                    $('#username-register').removeClass('is-invalid');
+                }
+            }
+        };
+        ajax.open("POST", "/check_username_" + name, true);
+        ajax.send();
+    }
+</script> {% endblock %}

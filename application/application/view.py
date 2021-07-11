@@ -1,7 +1,7 @@
 from application import app, controller
-from application.model import User
-from application.helpers import login_required, status
-from flask import Flask, flash, redirect, render_template, request, session
+from application.helpers import check_characters, login_required, status, error, display_error, check_length, string_length
+from flask import Flask, redirect, render_template, request, session
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 
@@ -108,7 +108,7 @@ def edit_application(application_id):
     application = controller.get_application(application_id)
     if request.method == "GET":
         return render_template("edit_application.html", application=application)
-    
+
     role = request.form.get("role_name")
     rank = request.form.get("application_rank")
     memo = request.form.get("application_memo")
@@ -182,37 +182,49 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
-    username = request.form.get("username")
-    password = request.form.get("password")
+    username = request.form.get("username-login")
+    password = request.form.get("password-login")
 
     if not username or not password:
-        return "must provide both username and password"
+        return error(1)
+    if check_characters([username, password]) == False:
+        return error(0)
+
+    if (check_length(len(username), string_length["username"]) == False
+            or check_length(len(password), string_length["password"]) == False):
+        return error(5)
 
     user = controller.get_user_by_username(username)
-
     if not user or not check_password_hash(user.hash, password):
-        return "invalid username and/or password"
+        return error(4)
 
     session["user_id"] = user.id
-
     return redirect("/")
 
 
 @app.route("/register", methods=["POST"])
 def register():
-    username = request.form.get("username_register")
-    password = request.form.get("password_register")
-    confirmation = request.form.get("confirmation_register")
+    username = request.form.get("username-register")
+    password = request.form.get("password-register")
+    confirmation = request.form.get("confirmation-register")
 
     if not username or not password or not confirmation:
-        return "must provide both username and password"
+        return error(1)
+
+    if check_characters([username, password, confirmation]) == False:
+        return error(0)
+
+    if (check_length(len(username), string_length["username"]) == False
+        or check_length(len(password), string_length["password"]) == False
+            or check_length(len(confirmation), string_length["password"]) == False):
+        return error(5)
 
     if password != confirmation:
-        return "confirmation did not match password"
+        return error(2)
 
     user = controller.get_user_by_username(username)
     if user != None:
-        return "username is already used"
+        return error(3)
 
     controller.register_user(username, generate_password_hash(password))
 
@@ -222,7 +234,28 @@ def register():
     return redirect("/")
 
 
+@app.route("/check_username_<username>", methods=["POST"])
+def check_username_availability(username):
+    """ Used by Javascript on the login screen """
+    value = controller.get_user_by_username(username)
+    if value != None:
+        return "Not available"
+    return "Available"
+
+
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
+
+
+def errorhandler(e):
+    """Handle error"""
+    if not isinstance(e, HTTPException):
+        e = InternalServerError()
+    return display_error(e.name, e.code)
+
+
+for code in default_exceptions:
+    """ Listen for errors """
+    app.errorhandler(code)(errorhandler)
