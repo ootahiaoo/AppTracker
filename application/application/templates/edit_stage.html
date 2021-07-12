@@ -9,8 +9,8 @@
                     <div class="col">
                         <select class="form-control mb-2" name="default-status">
                             <option disabled selected value="">Default list</option>
-                            {% for stage in stages %}
-                            <option>{{ stage }}</option>
+                            {% for status in status_list %}
+                            <option>{{ status }}</option>
                             {% endfor %}
                         </select>
                         <input class="form-control" id="custom-status" name="custom-status" type="text" maxlength="50" aria-describedby="status-caption" placeholder="Custom status" value="{{ stage.type }}">

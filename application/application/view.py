@@ -188,15 +188,15 @@ def add_stage(application_id):
 def edit_stage(stage_id):
     stage = controller.get_stage(stage_id)
     if request.method == "GET":
-        return render_template("edit_stage.html", stage=stage)
+        return render_template("edit_stage.html", stage=stage, status_list=status)
 
     date = request.form.get("stage-date")
     time = request.form.get("stage-time")
-    stage_memo = set_empty_response("stage_memo")
+    stage_memo = set_empty_response("stage-memo")
     type = request.form.get("default-status")
     if not type:
         type = set_empty_response("custom-status")
-    
+
     if not date or not time:
         datetime = ""
     else:
@@ -208,7 +208,7 @@ def edit_stage(stage_id):
         and check_length(stage_memo, length_pattern["memo"])
             and check_length(type, length_pattern["stage"])) == False:
         return error(5)
-    
+
     controller.edit_stage(stage_id, type, datetime, stage_memo)
 
     return application_details(stage.application_id)
