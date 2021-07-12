@@ -20,7 +20,8 @@ class User(object):
 
 
 class Project(object):
-    def __init__(self, id, user_id, created_on, name, started_on, ended_on, project_memo):
+    def __init__(self, id, user_id, created_on, name, started_on, ended_on,
+                 project_memo):
         self.id = id
         self.user_id = user_id
         self.created_on = created_on
@@ -36,7 +37,8 @@ class Project(object):
 
 
 class Application(object):
-    def __init__(self, id, project_id, name, company_id, role, application_memo, rank, company_name, type, date):
+    def __init__(self, id, project_id, name, company_id, role,
+                 application_memo, rank, company_name, type, date):
         self.id = id
         self.project_id = project_id
         self.project_name = name
@@ -117,7 +119,9 @@ def get_user_with_id(id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT * FROM users WHERE id = ?", (id,)).fetchone()
+            "SELECT * FROM users WHERE id = ?",
+            (id,)
+        ).fetchone()
         if result != None:
             return User.from_json(json.dumps(result))
     return None
@@ -127,7 +131,9 @@ def get_user_with_username(username):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+            "SELECT * FROM users WHERE username = ?",
+            (username,)
+        ).fetchone()
         if result != None:
             return User.from_json(json.dumps(result))
     return None
@@ -135,15 +141,22 @@ def get_user_with_username(username):
 
 def create_project(user_id, created_on, name, project_memo):
     with Database() as db:
-        db.execute("INSERT INTO projects(user_id, created_on, name, project_memo) VALUES(?, ?, ?, ?)",
-                   (user_id, created_on, name, project_memo))
+        db.execute(
+            """INSERT INTO 
+            projects(user_id, created_on, name, project_memo) 
+            VALUES(?, ?, ?, ?)""",
+            (user_id, created_on, name, project_memo)
+        )
         db.commit()
 
 
 def edit_project(project_id, name, started_on, ended_on, project_memo):
     with Database() as db:
-        db.execute("UPDATE projects SET name = ?, started_on = ?, ended_on = ?, project_memo = ? WHERE id = ?",
-                   (name, started_on, ended_on, project_memo, project_id))
+        db.execute(
+            """UPDATE projects SET name = ?, started_on = ?, 
+            ended_on = ?, project_memo = ? WHERE id = ?""",
+            (name, started_on, ended_on, project_memo, project_id)
+        )
         db.commit()
 
 
@@ -151,7 +164,9 @@ def get_project(project_id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT * FROM projects WHERE id = ?", (project_id,)).fetchone()
+            "SELECT * FROM projects WHERE id = ?",
+            (project_id,)
+        ).fetchone()
         if result != None:
             return Project.from_json(json.dumps(result))
     return None
@@ -161,7 +176,11 @@ def get_all_projects(user_id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT * FROM projects WHERE user_id = ? ORDER BY created_on DESC", (user_id,)).fetchall()
+            """SELECT * FROM projects 
+            WHERE user_id = ? 
+            ORDER BY created_on DESC""",
+            (user_id,)
+        ).fetchall()
         if len(result) != 0:
             projects = []
             for row in result:
@@ -183,7 +202,9 @@ def search_company(company_name):
         cursor = db.cursor()
         company_name = "%" + company_name + "%"
         result = cursor.execute(
-            "SELECT * FROM company WHERE company_name LIKE ?", (company_name,)).fetchall()
+            "SELECT * FROM company WHERE company_name LIKE ?",
+            (company_name,)
+        ).fetchall()
         if len(result) != 0:
             companies = []
             for row in result:
@@ -198,7 +219,9 @@ def search_company_js(company_name):
         cursor = db.cursor()
         company_name = "%" + company_name + "%"
         result = cursor.execute(
-            "SELECT * FROM company WHERE company_name LIKE ?", (company_name,)).fetchone()
+            "SELECT * FROM company WHERE company_name LIKE ?",
+            (company_name,)
+        ).fetchone()
         return json.dumps(result)
     return None
 
@@ -207,7 +230,9 @@ def get_company_id(company_name):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT id FROM company WHERE company_name = ?", (company_name,)).fetchone()
+            "SELECT id FROM company WHERE company_name = ?",
+            (company_name,)
+        ).fetchone()
         if result != None:
             return result["id"]
     return None
@@ -217,7 +242,9 @@ def get_company(company_id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT * FROM company WHERE id = ?", (company_id,)).fetchone()
+            "SELECT * FROM company WHERE id = ?",
+            (company_id,)
+        ).fetchone()
         if result != None:
             return Company.from_json(json.dumps(result))
     return None
@@ -225,8 +252,12 @@ def get_company(company_id):
 
 def create_application(project_id, company_id, role, memo, rank):
     with Database() as db:
-        db.execute("INSERT INTO applications(project_id, company_id, role, application_memo, rank) VALUES(?, ?, ?, ?, ?)",
-                   (project_id, company_id, role, memo, rank))
+        db.execute(
+            """INSERT INTO 
+            applications(project_id, company_id, role, application_memo, rank) 
+            VALUES(?, ?, ?, ?, ?)""",
+            (project_id, company_id, role, memo, rank)
+        )
         db.commit()
 
 
@@ -234,7 +265,12 @@ def get_simple_application(application_id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT company_name, role, application_memo FROM applications JOIN company ON company.id = applications.company_id WHERE applications.id = ?", (application_id,)).fetchone()
+            """SELECT company_name, role, application_memo 
+            FROM applications 
+            JOIN company ON company.id = applications.company_id 
+            WHERE applications.id = ?""",
+            (application_id,)
+        ).fetchone()
         return result
 
 
@@ -242,7 +278,10 @@ def get_application_id(project_id, company_id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT id FROM applications WHERE project_id = ? AND company_id = ?", (project_id, company_id)).fetchone()
+            """SELECT id FROM applications 
+            WHERE project_id = ? AND company_id = ?""",
+            (project_id, company_id)
+        ).fetchone()
         if result != None:
             return result["id"]
     return None
@@ -251,7 +290,17 @@ def get_application_id(project_id, company_id):
 def get_application(application_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute("SELECT id, project_id, name, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id JOIN projects ON projects.id = applications.project_id GROUP BY applications.id) WHERE id = ?", (application_id,)).fetchone()
+        result = cursor.execute(
+            """SELECT id, project_id, name, company_id, role, 
+            application_memo, rank, company_name, type, date 
+            FROM (SELECT * FROM applications 
+            JOIN company ON company.id = applications.company_id 
+            JOIN stage ON stage.application_id = applications.id 
+            JOIN projects ON projects.id = applications.project_id 
+            GROUP BY applications.id) 
+            WHERE id = ?""",
+            (application_id,)
+        ).fetchone()
         if result != None:
             return Application.from_json(json.dumps(result))
     return None
@@ -260,7 +309,19 @@ def get_application(application_id):
 def get_all_applications(project_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute("SELECT id, project_id, name, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id JOIN projects ON projects.id = applications.project_id ORDER BY stage.id DESC) WHERE project_id = ? GROUP BY application_id ORDER BY rank", (project_id,)).fetchall()
+        result = cursor.execute(
+            """SELECT id, project_id, name, company_id, role, 
+            application_memo, rank, company_name, type, date 
+            FROM (SELECT * FROM applications 
+            JOIN company ON company.id = applications.company_id 
+            JOIN stage ON stage.application_id = applications.id 
+            JOIN projects ON projects.id = applications.project_id 
+            ORDER BY stage.id DESC) 
+            WHERE project_id = ? 
+            GROUP BY application_id 
+            ORDER BY rank""",
+            (project_id,)
+        ).fetchall()
         if len(result) != 0:
             applications = []
             for row in result:
@@ -273,7 +334,18 @@ def get_all_applications(project_id):
 def get_company_history(company_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute("SELECT id, project_id, name, company_id, role, application_memo, rank, company_name, type, date FROM (SELECT * FROM applications JOIN company ON company.id = applications.company_id JOIN stage ON stage.application_id = applications.id JOIN projects ON projects.id = applications.project_id ORDER BY stage.id DESC) WHERE company_id = ? GROUP BY project_id", (company_id,)).fetchall()
+        result = cursor.execute(
+            """SELECT id, project_id, name, company_id, role, 
+            application_memo, rank, company_name, type, date 
+            FROM (SELECT * FROM applications 
+            JOIN company ON company.id = applications.company_id 
+            JOIN stage ON stage.application_id = applications.id 
+            JOIN projects ON projects.id = applications.project_id 
+            ORDER BY stage.id DESC) 
+            WHERE company_id = ? 
+            GROUP BY project_id""",
+            (company_id,)
+        ).fetchall()
         if len(result) != 0:
             applications = []
             for row in result:
@@ -285,15 +357,21 @@ def get_company_history(company_id):
 
 def edit_application(application_id, role, rank, memo):
     with Database() as db:
-        db.execute("UPDATE applications SET role = ?, rank = ?, application_memo = ? WHERE id = ?",
-                   (role, rank, memo, application_id))
+        db.execute(
+            """UPDATE applications SET role = ?, rank = ?, application_memo = ?
+             WHERE id = ?""",
+            (role, rank, memo, application_id)
+        )
         db.commit()
 
 
 def create_stage(application_id, status, datetime, stage_memo):
     with Database() as db:
-        db.execute("INSERT INTO stage (application_id, type, date, stage_memo) VALUES(?, ?, ?, ?)",
-                   (application_id, status, datetime, stage_memo))
+        db.execute(
+            """INSERT INTO stage (application_id, type, date, stage_memo) 
+            VALUES(?, ?, ?, ?)""",
+            (application_id, status, datetime, stage_memo)
+        )
         db.commit()
 
 
@@ -301,7 +379,9 @@ def get_stage(stage_id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT * FROM stage WHERE id = ?", (stage_id,)).fetchone()
+            "SELECT * FROM stage WHERE id = ?",
+            (stage_id,)
+        ).fetchone()
         if result != None:
             return Stage.from_json(json.dumps(result))
     return None
@@ -311,7 +391,9 @@ def get_process(application_id):
     with Database() as db:
         cursor = db.cursor()
         result = cursor.execute(
-            "SELECT * FROM stage WHERE application_id = ? ORDER BY id DESC", (application_id,)).fetchall()
+            "SELECT * FROM stage WHERE application_id = ? ORDER BY id DESC",
+            (application_id,)
+        ).fetchall()
         if len(result) != 0:
             stages = []
             for row in result:
@@ -323,6 +405,9 @@ def get_process(application_id):
 
 def update_stage(stage_id, type, date, stage_memo):
     with Database() as db:
-        db.execute("UPDATE stage SET type = ?, date = ?, stage_memo = ? WHERE id = ?",
-                   (type, date, stage_memo, stage_id))
+        db.execute(
+            """UPDATE stage SET type = ?, date = ?, stage_memo = ? 
+            WHERE id = ?""",
+            (type, date, stage_memo, stage_id)
+        )
         db.commit()

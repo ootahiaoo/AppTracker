@@ -1,7 +1,10 @@
 from application import app, controller
-from application.helpers import check_characters, is_rank_format, is_time_format, login_required, status, error, display_error, check_length, length_pattern, set_empty_response
+from application.helpers import check_characters, is_rank_format,\
+    is_time_format, login_required, status, error, display_error, \
+    check_length, length_pattern, set_empty_response
 from flask import Flask, redirect, render_template, request, session
-from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
+from werkzeug.exceptions import default_exceptions, HTTPException, \
+    InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 
@@ -66,14 +69,18 @@ def dashboard(project_id):
     # Merge requests?
     project = controller.get_project(project_id)
     applications = controller.get_all_applications(project_id)
-    return render_template("dashboard.html", project=project, applications=applications)
+    return render_template("dashboard.html",
+                           project=project,
+                           applications=applications)
 
 
 @app.route("/new_application_<project_id>", methods=["GET", "POST"])
 @login_required
 def new_application(project_id):
     if request.method == "GET":
-        return render_template("new_application.html", project_id=project_id, stages=status)
+        return render_template("new_application.html",
+                               project_id=project_id,
+                               stages=status)
 
     company_name = request.form.get("company-name")
     role = request.form.get("role")
@@ -125,7 +132,10 @@ def application_details(application_id):
     # TODO: merge requests?
     application = controller.get_simple_application(application_id)
     stages = controller.get_process(application_id)
-    return render_template("application_details.html", application_id=application_id, application=application, stages=stages)
+    return render_template("application_details.html",
+                           application_id=application_id,
+                           application=application,
+                           stages=stages)
 
 
 @app.route("/edit_application_<application_id>", methods=["GET", "POST"])
@@ -157,7 +167,9 @@ def edit_application(application_id):
 @login_required
 def add_stage(application_id):
     if request.method == "GET":
-        return render_template("new_stage.html", application_id=application_id, stages=status)
+        return render_template("new_stage.html",
+                               application_id=application_id,
+                               stages=status)
 
     date = request.form.get("stage-date")
     time = request.form.get("stage-time")
@@ -188,7 +200,9 @@ def add_stage(application_id):
 def edit_stage(stage_id):
     stage = controller.get_stage(stage_id)
     if request.method == "GET":
-        return render_template("edit_stage.html", stage=stage, status_list=status)
+        return render_template("edit_stage.html",
+                               stage=stage,
+                               status_list=status)
 
     date = request.form.get("stage-date")
     time = request.form.get("stage-time")
@@ -219,7 +233,9 @@ def edit_stage(stage_id):
 def company_details(company_id):
     company = controller.get_company(company_id)
     history = controller.get_company_history(company_id)
-    return render_template("company_details.html", company=company, history=history)
+    return render_template("company_details.html",
+                           company=company,
+                           history=history)
 
 
 @app.route("/search", methods=["POST"])
@@ -231,7 +247,9 @@ def search():
     if check_length(keyword, length_pattern["company_name"]) == False:
         return error(5)
     results = controller.search_company(keyword)
-    return render_template("search_result.html", keyword=keyword, results=results)
+    return render_template("search_result.html",
+                           keyword=keyword,
+                           results=results)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -272,8 +290,9 @@ def register():
         return error(0)
 
     if (check_length(username, length_pattern["username"])
-        and check_length(password, length_pattern["password"])
-            and check_length(confirmation, length_pattern["password"])) == False:
+            and check_length(password, length_pattern["password"])
+                and check_length(confirmation, length_pattern["password"])
+            ) == False:
         return error(5)
 
     if password != confirmation:

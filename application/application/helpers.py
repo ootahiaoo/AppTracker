@@ -1,6 +1,5 @@
 from flask import redirect, session, render_template, request
 from functools import wraps
-import time
 import re
 
 status = ["Preparing", "Casual meeting", "Sent resume", "1st interview",
@@ -35,7 +34,8 @@ length_pattern = {
 
 def check_characters(list):
     """
-    https://www.geeksforgeeks.org/python-check-if-string-contain-only-defined-characters-using-regex/
+    https://www.geeksforgeeks.org/
+    python-check-if-string-contain-only-defined-characters-using-regex/
     """
     for string in list:
         regex = re.compile('^[a-zA-Z0-9_-]+$')
