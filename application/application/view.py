@@ -226,6 +226,10 @@ def company_details(company_id):
 @login_required
 def search():
     keyword = request.form.get("q")
+    if not keyword:
+        return error(1)
+    if check_length(keyword, length_pattern["company_name"]) == False:
+        return error(5)
     results = controller.search_company(keyword)
     return render_template("search_result.html", keyword=keyword, results=results)
 
