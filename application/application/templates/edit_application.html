@@ -1,53 +1,64 @@
-{% extends "layout.html" %} {% block title %} Edit Application {% endblock %} {% block main %} {% if application %}
-<div class="card">
-    <div class="card-body">
+{% extends "layout.html" %}
+{% block title %}
+  Edit Application
+{% endblock %}
+{% block main %}
+  {% if application %}
+    <div class="card">
+      <div class="card-body">
         <h3 class="card-title">Edit Application</h3>
         <div class="card-text card-container">
-            <form action="/edit_application_{{ application.id }}" method="post" class="needs-validation">
-                <div class="form-group row">
-                    <label for="project-name" class="col-sm-3 col-form-label text-justify">Project:</label>
-                    <div class="col">
-                        <input class="form-control-plaintext" id="project-name" type="text" readonly value="{{ application.project_name }}">
-                    </div>
-                </div>
+          <form action="/edit_application_{{ application.id }}" method="post" class="needs-validation">
+            <div class="form-group row">
+              <label for="project-name" class="col-sm-3 col-form-label text-justify">Project:</label>
+              <div class="col">
+                <input class="form-control-plaintext" id="project-name" type="text" readonly="readonly" value="{{ application.project_name }}">
+              </div>
+            </div>
 
-                <div class="form-group row">
-                    <label for="company-name" class="col-sm-3 col-form-label text-justify">Company:</label>
-                    <div class="col">
-                        <input class="form-control-plaintext" id="company-name" type="text" readonly value="{{ application.company_name }}">
-                    </div>
-                </div>
+            <div class="form-group row">
+              <label for="company-name" class="col-sm-3 col-form-label text-justify">Company:</label>
+              <div class="col">
+                <input class="form-control-plaintext" id="company-name" type="text" readonly="readonly" value="{{ application.company_name }}">
+              </div>
+            </div>
 
-                <div class="form-group row text-justify">
-                    <label for="role-name" class="col-sm-3 col-form-label">Role:</label>
-                    <div class="col">
-                        <input class="form-control" id="role-name" name="role-name" type="text" value="{{ application.role }}" minlength="1" maxlength="50" required>
-                    </div>
-                </div>
+            <div class="form-group row text-justify">
+              <label for="role-name" class="col-sm-3 col-form-label">Role:</label>
+              <div class="col">
+                <input class="form-control" id="role-name" name="role-name" type="text" value="{{ application.role }}" minlength="1" maxlength="50" required="required">
+              </div>
+            </div>
 
-                <div class="form-group row text-justify">
-                    <label for="application-rank" class="col-sm-3 col-form-label">Rank:</label>
-                    <div class="col-3">
-                        <input class="form-control" id="application-rank" name="application-rank" type="number" aria-describedby="application-rank-caption" value="{{ application.rank }}" maxlength="3" min="1" max="100" step="1" required>
-                    </div>
-                    <div class="col">
-                        <small class="form-text text-muted" id="application-rank-caption">How you rank this application in your top. Can be the same rank as another application.</small>
-                    </div>
-                </div>
+            <div class="form-group row text-justify">
+              <label for="application-rank" class="col-sm-3 col-form-label">Rank:</label>
+              <div class="col-3">
+                <input class="form-control" id="application-rank" name="application-rank" type="number" aria-describedby="application-rank-caption" value="{{ application.rank }}" maxlength="3" min="1" max="100" step="1" required="required">
+              </div>
+              <div class="col">
+                <small class="form-text text-muted" id="application-rank-caption">
+                  How you rank this application in your top. Can be the same rank as another application.</small>
+              </div>
+            </div>
 
-                <div class="form-group row text-justify">
-                    <label for="application-memo" class="col-sm-3 col-form-label">Memo:</label>
-                    <div class="col">
-                        {% if application.application_memo != "" %}
-                        <textarea class="form-control" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption">{{ application.application_memo }}</textarea> {% else %}
-                        <textarea class="form-control" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption" placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>                        {% endif %}
-                        <small class="form-text text-muted" id="application-memo-caption">Anything you want to remember about this application.</small>
-                    </div>
-                </div>
+            <div class="form-group row text-justify">
+              <label for="application-memo" class="col-sm-3 col-form-label">Memo:</label>
+              <div class="col">
+                {% if application.application_memo != "" %}
+                  <textarea class="form-control" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption">
+                    {{ application.application_memo }}</textarea>
+                {% else %}
+                  <textarea class="form-control" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption" placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>
+                {% endif %}
+                <small class="form-text text-muted" id="application-memo-caption">Anything you want to remember about this application.</small>
+              </div>
+            </div>
 
-                <button class="btn btn-primary" type="submit">Confirm Changes</button>
-            </form>
+            <button class="btn btn-primary" type="submit">
+              Confirm Changes</button>
+          </form>
         </div>
+      </div>
     </div>
-</div>
-{% endif %} {% endblock %}
+  {% endif %}
+{% endblock %}

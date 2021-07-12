@@ -2,7 +2,7 @@
 
 <html lang="en">
 
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, width=device-width">
 
@@ -15,37 +15,44 @@
 
     <link href="/static/styles.css" rel="stylesheet">
 
-    <title>{% block title %}{% endblock %} - Applications Tracker</title>
-</head>
+    <title>
+      {% block title %}{% endblock %}
+      - Applications Tracker</title>
+  </head>
 
-<body>
+  <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light border">
 
-        <span id="navbar_title"><a href="/">AppTracker</a></span> {% if session.user_id %}
+      <span id="navbar_title">
+        <a href="/">AppTracker</a>
+      </span>
+      {% if session.user_id %}
         <form action="/search" id="navbar_search_form" method="post">
-            <div class="input-group input-group-sm mb3">
-                <input class="form-control" id="search_form_input" placeholder="Company name" type="text" name="q" maxlength="50" autocomplete="off" autocapitalize="none" autocorrect="off">
-                <div class="input-group-append">
-                    <input class="btn btn-primary" type="submit" value="Search">
-                </div>
+          <div class="input-group input-group-sm mb3">
+            <input class="form-control" id="search_form_input" placeholder="Company name" type="text" name="q" maxlength="50" autocomplete="off" autocapitalize="none" autocorrect="off">
+            <div class="input-group-append">
+              <input class="btn btn-primary" type="submit" value="Search">
             </div>
+          </div>
         </form>
 
         <ul class="navbar-nav ml-auto mt-2">
-            <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Log Out</a>
+          </li>
         </ul>
-        {% endif %}
+      {% endif %}
     </nav>
 
     <main class="container mx-auto mt-4">
-        {% block main %}{% endblock %}
+      {% block main %}{% endblock %}
     </main>
 
     <footer>
-        <!-- Add copyright? -->
+      <!-- Add copyright? -->
     </footer>
 
     {% block javascript %}{% endblock %}
-</body>
+  </body>
 
 </html>

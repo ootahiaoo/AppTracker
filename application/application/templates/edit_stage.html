@@ -1,90 +1,99 @@
-{% extends "layout.html" %} {% block title %} Edit Interview Stage {% endblock %} {% block main %} {% if stage %}
-<div class="card">
-    <div class="card-body">
+{% extends "layout.html" %}
+{% block title %}
+  Edit Interview Stage
+{% endblock %}
+{% block main %}
+  {% if stage %}
+    <div class="card">
+      <div class="card-body">
         <h3 class="card-title">Edit Interview Stage</h3>
         <div class="card-text card-container">
-            <form action="/edit_stage_{{ stage.id }}" method="post" id="edit-stage-form" class="needs-validation">
-                <div class="form-group row text-justify">
-                    <label for="default-status" class="col-sm-3 col-form-label">Stage:</label>
-                    <div class="col">
-                        <select class="form-control mb-2" name="default-status">
-                            <option disabled selected value="">Default list</option>
-                            {% for status in status_list %}
-                            <option>{{ status }}</option>
-                            {% endfor %}
-                        </select>
-                        <input class="form-control" id="custom-status" name="custom-status" type="text" maxlength="50" aria-describedby="status-caption" placeholder="Custom status" value="{{ stage.type }}">
-                        <small class="form-text text-muted" id="status-caption">Choose in the default list or set a custom status.</small>
-                    </div>
-                </div>
+          <form action="/edit_stage_{{ stage.id }}" method="post" id="edit-stage-form" class="needs-validation">
+            <div class="form-group row text-justify">
+              <label for="default-status" class="col-sm-3 col-form-label">Stage:</label>
+              <div class="col">
+                <select class="form-control mb-2" name="default-status">
+                  <option disabled="disabled" selected="selected" value="">Default list</option>
+                  {% for status in status_list %}
+                    <option>{{ status }}</option>
+                  {% endfor %}
+                </select>
+                <input class="form-control" id="custom-status" name="custom-status" type="text" maxlength="50" aria-describedby="status-caption" placeholder="Custom status" value="{{ stage.type }}">
+                <small class="form-text text-muted" id="status-caption">Choose in the default list or set a custom status.</small>
+              </div>
+            </div>
 
-                <div class="form-group row text-justify">
-                    {% if stage.date != "" %}
-                    <label class="col-sm-3 col-form-label">Date & Time:</label>
-                    <div class="col-sm-4">
-                        <input class="form-control-plaintext ml-1" type="text" readonly value="{{ stage.date }}">
-                    </div>
-                    <div class="col-sm-4">
-                        <input class="form-control mb-2" name="stage-date" type="date">
-                        <input class="form-control stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
-                        <div class="invalid-feedback">Please use the format HH:MM.</div>
-                    </div>
-                    {% else %}
-                    <label class="col-sm-3 col-form-label">Date & Time:</label>
-                    <div class="col-sm-4">
-                        <input class="form-control mb-2" name="stage-date" type="date">
-                    </div>
-                    <div class="col-sm-4">
-                        <input class="form-control stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
-                        <div class="invalid-feedback">Please use the format HH:MM.</div>
-                    </div>
-                    {% endif %}
+            <div class="form-group row text-justify">
+              {% if stage.date != "" %}
+                <label class="col-sm-3 col-form-label">Date & Time:</label>
+                <div class="col-sm-4">
+                  <input class="form-control-plaintext ml-1" type="text" readonly="readonly" value="{{ stage.date }}">
                 </div>
-
-                <div class="form-group row text-justify">
-                    <label for="stage-memo" class="col-sm-3 col-form-label">Memo:</label>
-                    <div class="col">
-                        <textarea class="form-control" id="stage-memo" name="stage-memo" aria-describedby="stage-memo-caption" rows="3" maxlength="300">{{ stage.stage_memo }}</textarea>
-                        <small class="form-text text-muted" id="stage-memo-caption">Example: interviewer names, things that you
-                            need to prepare, etc.</small>
-                    </div>
+                <div class="col-sm-4">
+                  <input class="form-control mb-2" name="stage-date" type="date">
+                  <input class="form-control stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
+                  <div class="invalid-feedback">Please use the format HH:MM.
+                  </div>
                 </div>
+              {% else %}
+                <label class="col-sm-3 col-form-label">Date & Time:</label>
+                <div class="col-sm-4">
+                  <input class="form-control mb-2" name="stage-date" type="date">
+                </div>
+                <div class="col-sm-4">
+                  <input class="form-control stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
+                  <div class="invalid-feedback">Please use the format HH:MM.
+                  </div>
+                </div>
+              {% endif %}
+            </div>
 
-                <button class="btn btn-primary" type="submit">Confirm Changes</button>
-            </form>
+            <div class="form-group row text-justify">
+              <label for="stage-memo" class="col-sm-3 col-form-label">Memo:
+              </label>
+              <div class="col">
+                <textarea class="form-control" id="stage-memo" name="stage-memo" aria-describedby="stage-memo-caption" rows="3" maxlength="300">{{ stage.stage_memo }}</textarea>
+                <small class="form-text text-muted" id="stage-memo-caption">Example: interviewer names, things that you need to prepare, etc.</small>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Confirm Changes</button>
+          </form>
         </div>
+      </div>
     </div>
-</div>
-{% endif %} {% endblock %} {% block javascript %}
-<script>
-    $(document).ready(function() {
+  {% endif %}
+{% endblock %}
+{% block javascript %}
+  <script>
+    $(document).ready(function () {
 
-        $('#edit-stage-form').submit(function(event) {
-            if (checkTimeFormat() === false) {
-                event.preventDefault();
-                return false;
-            }
-        });
+      $('#edit-stage-form').submit(function (event) {
+        if (checkTimeFormat() === false) {
+          event.preventDefault();
+          return false;
+        }
+      });
 
-        $('.stage-time').on('change', function(event) {
-            checkTimeFormat();
-        });
+      $('.stage-time').on('change', function (event) {
+        checkTimeFormat();
+      });
     });
 
     function checkTimeFormat() {
-        var input = $('.stage-time').val();
-        if (input == "" || checkTimeRegex(input)) {
-            $('.stage-time').removeClass('is-invalid');
-            return true;
-        }
-        $('.stage-time').addClass('is-invalid');
-        return false;
+      var input = $('.stage-time').val();
+      if (input == "" || checkTimeRegex(input)) {
+        $('.stage-time').removeClass('is-invalid');
+        return true;
+      }
+      $('.stage-time').addClass('is-invalid');
+      return false;
     }
 
     // https://adamprescott.net/2014/01/08/validate-time-entry-with-javascript/
     function checkTimeRegex(time) {
-        var regex = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
-        return time.match(regex);
+      var regex = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
+      return time.match(regex);
     }
-</script>
+  </script>
 {% endblock %}

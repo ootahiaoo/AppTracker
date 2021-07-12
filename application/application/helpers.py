@@ -3,8 +3,8 @@ from functools import wraps
 import time
 import re
 
-status = ["Preparing", "Casual meeting", "Sent resume", "1st interview", "2nd interview", "3rd interview",
-          "4th interview", "5th interview", "6th interview", "Final interview", "Offer", "Technical test", "Rejected", "Accepted", "On hold"]
+status = ["Preparing", "Casual meeting", "Sent resume", "1st interview",
+          "2nd interview", "3rd interview", "4th interview", "5th interview", "6th interview", "Final interview", "Offer", "Technical test", "Rejected", "Accepted", "On hold"]
 
 error_messages = {
     0: "may only use underscore, dash or alphanumeric characters",

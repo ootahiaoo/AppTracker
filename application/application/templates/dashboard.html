@@ -1,39 +1,63 @@
-{% extends "layout.html" %} {% block title %} Dashboard {% endblock %} {% block main %}
-<div class="container">
+{% extends "layout.html" %}
+{% block title %}
+  Dashboard
+{% endblock %}
+{% block main %}
+  <div class="container">
     {% if project %}
-    <h3 class="text-break">Dashboard for project: {{ project.name }}</h3>
-    <div class="form-group">
+      <h3 class="text-break">Dashboard for project:
+        {{ project.name }}</h3>
+      <div class="form-group">
         <form action="/new_application_{{ project.id }}" method="get">
-            <button class="btn btn-primary btn-sm" type="submit">New Application</button>
+          <button class="btn btn-primary btn-sm" type="submit">
+            New Application</button>
         </form>
-    </div>
+      </div>
 
-    {% if applications %}
-    <table class="table table-responsive table-hover table-bordered">
-        <thead>
+      {% if applications %}
+        <table class="table table-responsive table-hover table-bordered">
+          <thead>
             <tr>
-                <th class="col-1">Rank</th>
-                <th class="col-3">Company Name</th>
-                <th class="col-3">Role</th>
-                <th class="col-2">Stage</th>
-                <th class="col-1">Date</th>
-                <th class="col-2 memo">Memo</th>
+              <th class="col-1">Rank</th>
+              <th class="col-3">Company Name</th>
+              <th class="col-3">Role</th>
+              <th class="col-2">Stage</th>
+              <th class="col-1">Date</th>
+              <th class="col-2 memo">Memo</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% for row in applications %}
-            <tr>
+              <tr>
                 <td class="col-1">{{ row.rank }}</td>
-                <td class="col-3"><a href="/company_{{ row.company_id}}">{{ row.company_name }}</a></td>
-                <td class="col-3"><a href="/application_details_{{ row.id }}">{{ row.role }}</a></td>
-                <td class="col-2">{{ row.stage }}</td>
-                <td class="col-1">{% if row.date == "" %}n/a{% else %}{{ row.date }}{% endif %}</td>
-                <td class="col-2 memo">{% if row.application_memo == "" %}n/a{% else %}{{ row.application_memo }}{% endif %}
+                <td class="col-3">
+                  <a href="/company_{{ row.company_id}}">
+                    {{ row.company_name }}</a>
                 </td>
-            </tr>
+                <td class="col-3">
+                  <a href="/application_details_{{ row.id }}">
+                    {{ row.role }}</a>
+                </td>
+                <td class="col-2">{{ row.stage }}</td>
+                <td class="col-1">
+                  {% if row.date == "" %}
+                    n/a
+                  {% else %}
+                    {{ row.date }}
+                  {% endif %}
+                </td>
+                <td class="col-2 memo">
+                  {% if row.application_memo == "" %}
+                    n/a
+                  {% else %}
+                    {{ row.application_memo }}
+                  {% endif %}
+                </td>
+              </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    {% endif %} {% endif %}
-</div>
+          </tbody>
+        </table>
+      {% endif %}
+    {% endif %}
+  </div>
 {% endblock %}

@@ -1,53 +1,66 @@
-{% extends "layout.html" %} {% block title %} Edit Project {% endblock %} {% block main %} {% if project %}
-<div class="card">
-    <div class="card-body">
+{% extends "layout.html" %}
+{% block title %}
+  Edit Project
+{% endblock %}
+{% block main %}
+  {% if project %}
+    <div class="card">
+      <div class="card-body">
         <h3 class="card-title">Edit Project</h3>
         <div class="card-text card-container">
-            <form action="/edit_project_{{ project.id }}" method="post">
-                <div class="form-group row text-justify">
-                    <label for="project-name" class="col-sm-3 col-form-label">Project name:</label>
-                    <div class="col">
-                        {% if project.name != "" %}
-                        <input class="form-control" id="project-name" name="project-name" type="text" maxlength="50" aria-describedby="project-name-caption" value="{{ project.name }}"> {% else %}
-                        <input class="form-control" id="project-name" name="project-name" type="text" maxlength="50" aria-describedby="project-name-caption" placeholder="Example: 2021 job change, sophomore internship, job hunting abroad..."> {% endif　%}
-                        <small class="form-text text-muted" id="project-name-caption">To help you remember when the job
-                            hunting happened or what it was about.</small>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="project-creation-date" class="col-sm-3 col-form-label text-justify">Created on:</label>
-                    <div class="col">
-                        <input class="form-control-plaintext" id="project-creation-date" name="creation-date" type="text" readonly value="{{ simplify_date(project.created_on) }}">
-                    </div>
-                </div>
+          <form action="/edit_project_{{ project.id }}" method="post">
+            <div class="form-group row text-justify">
+              <label for="project-name" class="col-sm-3 col-form-label">
+                Project name:</label>
+              <div class="col">
+                {% if project.name != "" %}
+                  <input class="form-control" id="project-name" name="project-name" type="text" maxlength="50" aria-describedby="project-name-caption" value="{{ project.name }}">
+                {% else %}
+                  <input class="form-control" id="project-name" name="project-name" type="text" maxlength="50" aria-describedby="project-name-caption" placeholder="Example: 2021 job change, sophomore internship, job hunting abroad...">
+                {% endif %}
+                <small class="form-text text-muted" id="project-name-caption">
+                  To help you remember when the job hunting happened or what it was about.</small>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="project-creation-date" class="col-sm-3 col-form-label text-justify">Created on:</label>
+              <div class="col">
+                <input class="form-control-plaintext" id="project-creation-date" name="creation-date" type="text" readonly="readonly" value="{{ simplify_date(project.created_on) }}">
+              </div>
+            </div>
 
-                <div class="form-group row">
-                    <label for="starting-date" class="col-sm-3 col-form-label text-justify">Started on:</label>
-                    <div class="col-sm-4">
-                        <input class="form-control" id="starting-date" name="starting-date" type="date" value="{{ project.started_on }}">
-                    </div>
-                </div>
+            <div class="form-group row">
+              <label for="starting-date" class="col-sm-3 col-form-label text-justify">Started on:</label>
+              <div class="col-sm-4">
+                <input class="form-control" id="starting-date" name="starting-date" type="date" value="{{ project.started_on }}">
+              </div>
+            </div>
 
-                <div class="form-group row">
-                    <label for="ending-date" class="col-sm-3 col-form-label text-justify">Ended on:</label>
-                    <div class="col-sm-4">
-                        <input class="form-control" id="ending-date" name="ending-date" type="date" value="{{ project.ended_on }}">
-                    </div>
-                </div>
+            <div class="form-group row">
+              <label for="ending-date" class="col-sm-3 col-form-label text-justify">Ended on:</label>
+              <div class="col-sm-4">
+                <input class="form-control" id="ending-date" name="ending-date" type="date" value="{{ project.ended_on }}">
+              </div>
+            </div>
 
-                <div class="form-group row text-justify">
-                    <label for="project-memo" class="col-sm-3 col-form-label">Memo:</label>
-                    <div class="col">
-                        {% if project.project_memo != "" %}
-                        <textarea class="form-control" id="project-memo" name="project-memo" 　rows="3" maxlength="300" aria-describedby="project-memo-caption">{{ project.project_memo }}</textarea> {% else %}
-                        <textarea class="form-control" id="project-memo" name="project-memo" rows="3" maxlength="300" aria-describedby="project-memo-caption" placeholder="Example: received 3 offers, had to put on hold, nice experience with several companies..."></textarea>                        {% endif %}
-                        <small class="form-text text-muted" id="project-memo-caption">Anything you want to see about this job hunting on the projects list.</small>
-                    </div>
-                </div>
+            <div class="form-group row text-justify">
+              <label for="project-memo" class="col-sm-3 col-form-label">Memo:</label>
+              <div class="col">
+                {% if project.project_memo != "" %}
+                  <textarea class="form-control" id="project-memo" name="project-memo" rows="3" maxlength="300" aria-describedby="project-memo-caption">
+                    {{ project.project_memo }}</textarea>
+                {% else %}
+                  <textarea class="form-control" id="project-memo" name="project-memo" rows="3" maxlength="300" aria-describedby="project-memo-caption" placeholder="Example: received 3 offers, had to put on hold, nice experience with several companies..."></textarea>
+                {% endif %}
+                <small class="form-text text-muted" id="project-memo-caption">Anything you want to see about this job hunting on the projects list.</small>
+              </div>
+            </div>
 
-                <button class="btn btn-primary" type="submit">Confirm Changes</button>
-            </form>
+            <button class="btn btn-primary" type="submit">Confirm Changes
+            </button>
+          </form>
         </div>
+      </div>
     </div>
-</div>
-{% endif %} {% endblock %}
+  {% endif %}
+{% endblock %}
