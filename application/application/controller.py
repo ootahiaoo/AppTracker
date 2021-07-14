@@ -30,24 +30,24 @@ def get_all_projects(user_id):
     return model.get_all_projects(user_id)
 
 
-def create_company(company_name):
-    model.create_company(company_name)
+def create_company(user_id, company_name):
+    model.create_company(user_id, company_name)
 
 
-def get_company_id(company_name):
-    return model.get_company_id(company_name)
+def get_company_id(user_id, company_name):
+    return model.get_company_id(user_id, company_name)
 
 
 def get_company(company_id):
     return model.get_company(company_id)
 
 
-def search_company(company_name):
-    return model.search_company(company_name)
+def search_company(user_id, company_name):
+    return model.search_company(user_id, company_name)
 
 
-def search_company_js(company_name):
-    return model.search_company_js(company_name)
+def search_company_js(user_id, company_name):
+    return model.search_company_js(user_id, company_name)
 
 
 def create_application(project_id, company_id, role, memo, rank,

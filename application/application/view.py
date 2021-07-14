@@ -115,10 +115,11 @@ def new_application(project_id):
     if is_rank_format(rank) == False:
         return error(10)
 
-    company = controller.search_company(company_name)
+    company = controller.search_company(session["user_id"], company_name)
     if not company:
-        controller.create_company(company_name)
-        company_id = controller.get_company_id(company_name)
+        controller.create_company(session["user_id"], company_name)
+        company_id = controller.get_company_id(
+            session["user_id"], company_name)
     else:
         company_id = company[0].id
 
@@ -252,7 +253,7 @@ def search():
         return error(1)
     if check_length(keyword, length_pattern["company_name"]) == False:
         return error(5)
-    results = controller.search_company(keyword)
+    results = controller.search_company(session["user_id"], keyword)
     return render_template("search_result.html",
                            keyword=keyword,
                            results=results)
@@ -297,8 +298,8 @@ def register():
 
     if (check_length(username, length_pattern["username"])
             and check_length(password, length_pattern["password"])
-                and check_length(confirmation, length_pattern["password"])
-            ) == False:
+        and check_length(confirmation, length_pattern["password"])
+        ) == False:
         return error(5)
 
     if password != confirmation:
@@ -328,7 +329,7 @@ def check_username_availability(username):
 @app.route("/check_existing_<company_name>", methods=["POST"])
 def check_existing_company(company_name):
     """ Used by Javascript when creating a new application """
-    return controller.search_company_js(company_name)
+    return controller.search_company_js(session["user_id"], company_name)
 
 
 @app.route("/logout")
