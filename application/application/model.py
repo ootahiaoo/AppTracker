@@ -181,13 +181,13 @@ def get_all_projects(user_id):
             ORDER BY created_on DESC""",
             (user_id,)
         ).fetchall()
-        if len(result) != 0:
-            projects = []
-            for row in result:
-                project = Project.from_json(json.dumps(row))
-                projects.append(project)
-            return projects
-    return None
+        if len(result) == 0:
+            return None
+        projects = []
+        for row in result:
+            project = Project.from_json(json.dumps(row))
+            projects.append(project)
+        return projects
 
 
 def create_company(company_name):
@@ -205,13 +205,13 @@ def search_company(company_name):
             "SELECT * FROM company WHERE company_name LIKE ?",
             (company_name,)
         ).fetchall()
-        if len(result) != 0:
-            companies = []
-            for row in result:
-                company = Company.from_json(json.dumps(row))
-                companies.append(company)
-            return companies
-    return None
+        if len(result) == 0:
+            return None
+        companies = []
+        for row in result:
+            company = Company.from_json(json.dumps(row))
+            companies.append(company)
+        return companies
 
 
 def search_company_js(company_name):
@@ -223,7 +223,6 @@ def search_company_js(company_name):
             (company_name,)
         ).fetchone()
         return json.dumps(result)
-    return None
 
 
 def get_company_id(company_name):
@@ -322,13 +321,13 @@ def get_all_applications(project_id):
             ORDER BY rank""",
             (project_id,)
         ).fetchall()
-        if len(result) != 0:
-            applications = []
-            for row in result:
-                application = Application.from_json(json.dumps(row))
-                applications.append(application)
-            return applications
-    return None
+        if len(result) == 0:
+            return None
+        applications = []
+        for row in result:
+            application = Application.from_json(json.dumps(row))
+            applications.append(application)
+        return applications
 
 
 def get_company_history(company_id):
@@ -346,13 +345,13 @@ def get_company_history(company_id):
             GROUP BY project_id""",
             (company_id,)
         ).fetchall()
-        if len(result) != 0:
-            applications = []
-            for row in result:
-                application = Application.from_json(json.dumps(row))
-                applications.append(application)
-            return applications
-    return None
+        if len(result) == 0:
+            return None
+        applications = []
+        for row in result:
+            application = Application.from_json(json.dumps(row))
+            applications.append(application)
+        return applications
 
 
 def edit_application(application_id, role, rank, memo):
@@ -394,13 +393,13 @@ def get_process(application_id):
             "SELECT * FROM stage WHERE application_id = ? ORDER BY id DESC",
             (application_id,)
         ).fetchall()
-        if len(result) != 0:
-            stages = []
-            for row in result:
-                stage = Stage.from_json(json.dumps(row))
-                stages.append(stage)
-            return stages
-    return None
+        if len(result) == 0:
+            return None
+        stages = []
+        for row in result:
+            stage = Stage.from_json(json.dumps(row))
+            stages.append(stage)
+        return stages
 
 
 def update_stage(stage_id, type, date, stage_memo):

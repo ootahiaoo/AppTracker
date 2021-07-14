@@ -26,10 +26,10 @@
             <div class="form-group row text-justify">
               <label class="col-sm-3 col-form-label">Date & Time:</label>
               <div for="stage-date" class="col-sm-4 mb-2">
-                <input class="form-control" id="stage-date" name="stage-date" type="date">
+                <input class="form-control stage-date" id="stage-date" name="stage-date" type="date">
               </div>
               <div class="col-sm-4">
-                <input class="form-control" id="stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
+                <input class="form-control stage-time" id="stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
                 <div class="invalid-feedback">Please use the format HH:MM.</div>
               </div>
             </div>
@@ -51,35 +51,5 @@
   {% endif %}
 {% endblock %}
 {% block javascript %}
-  <script>
-    $(document).ready(function () {
-
-      $('#new-stage-form').submit(function (event) {
-        if (checkTimeFormat() === false) {
-          event.preventDefault();
-          return false;
-        }
-      });
-
-      $('#stage-time').on('change', function (event) {
-        checkTimeFormat();
-      });
-    });
-
-    function checkTimeFormat() {
-      var input = $('#stage-time').val();
-      if (input == "" || checkTimeRegex(input)) {
-        $('#stage-time').removeClass('is-invalid');
-        return true;
-      }
-      $('#stage-time').addClass('is-invalid');
-      return false;
-    }
-
-    // https://adamprescott.net/2014/01/08/validate-time-entry-with-javascript/
-    function checkTimeRegex(time) {
-      var regex = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
-      return time.match(regex);
-    }
-  </script>
+  <script src="static/script.js"></script>
 {% endblock %}

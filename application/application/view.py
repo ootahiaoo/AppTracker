@@ -95,8 +95,10 @@ def new_application(project_id):
     if not application_status:
         application_status = set_empty_response("custom-status")
 
-    if not date or not time:
+    if not date and not time:
         datetime = ""
+    elif not date or not time:
+        return error(11)
     else:
         if is_time_format(time) == False:
             return error(8)
@@ -178,8 +180,10 @@ def add_stage(application_id):
     if not type:
         type = set_empty_response("custom-status")
 
-    if not date or not time:
+    if not date and not time:
         datetime = ""
+    elif not time:
+        return error(11)
     else:
         if is_time_format(time) == False:
             return error(8)
@@ -211,8 +215,10 @@ def edit_stage(stage_id):
     if not type:
         type = set_empty_response("custom-status")
 
-    if not date or not time:
+    if not date and not time:
         datetime = ""
+    elif not date or not time:
+        return error(11)
     else:
         if is_time_format(time) == False:
             return error(8)
@@ -321,7 +327,7 @@ def check_username_availability(username):
 
 @app.route("/check_existing_<company_name>", methods=["POST"])
 def check_existing_company(company_name):
-    """ Used by Javascript when creating new application """
+    """ Used by Javascript when creating a new application """
     return controller.search_company_js(company_name)
 
 
@@ -332,7 +338,6 @@ def logout():
 
 
 def errorhandler(e):
-    """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
     return display_error(e.name, e.code)

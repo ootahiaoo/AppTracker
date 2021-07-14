@@ -47,8 +47,7 @@
               <label for="project-memo" class="col-sm-3 col-form-label">Memo:</label>
               <div class="col">
                 {% if project.project_memo != "" %}
-                  <textarea class="form-control" id="project-memo" name="project-memo" rows="3" maxlength="300" aria-describedby="project-memo-caption">
-                    {{ project.project_memo }}</textarea>
+                  <textarea class="form-control" id="project-memo" name="project-memo" rows="3" maxlength="300" aria-describedby="project-memo-caption">{{ project.project_memo }}</textarea>
                 {% else %}
                   <textarea class="form-control" id="project-memo" name="project-memo" rows="3" maxlength="300" aria-describedby="project-memo-caption" placeholder="Example: received 3 offers, had to put on hold, nice experience with several companies..."></textarea>
                 {% endif %}

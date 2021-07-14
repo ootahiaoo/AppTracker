@@ -36,8 +36,7 @@
                 <input class="form-control" id="application-rank" name="application-rank" type="number" aria-describedby="application-rank-caption" value="{{ application.rank }}" maxlength="3" min="1" max="100" step="1" required="required">
               </div>
               <div class="col">
-                <small class="form-text text-muted" id="application-rank-caption">
-                  How you rank this application in your top. Can be the same rank as another application.</small>
+                <small class="form-text text-muted" id="application-rank-caption">How you rank this application in your top. Can be the same rank as another application.</small>
               </div>
             </div>
 
@@ -45,8 +44,7 @@
               <label for="application-memo" class="col-sm-3 col-form-label">Memo:</label>
               <div class="col">
                 {% if application.application_memo != "" %}
-                  <textarea class="form-control" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption">
-                    {{ application.application_memo }}</textarea>
+                  <textarea class="form-control text-justify" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption">{{ application.application_memo }}</textarea>
                 {% else %}
                   <textarea class="form-control" id="application-memo" name="application-memo" rows="3" maxlength="300" aria-describedby="application-memo-caption" placeholder="Example: ex-colleague working there, nice salary, applied through recruiter, need to prepare for tech test..."></textarea>
                 {% endif %}

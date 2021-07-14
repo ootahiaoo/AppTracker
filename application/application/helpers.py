@@ -16,7 +16,8 @@ error_messages = {
     7: "must provide a company name, a role and a rank",
     8: "time format is not valid",
     9: "must provide a role and a rank",
-    10: "rank format is not valid"
+    10: "rank format is not valid",
+    11: "must provide both date and time"
 }
 
 length_pattern = {

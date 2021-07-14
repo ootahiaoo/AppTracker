@@ -41,10 +41,10 @@
               <div class="form-group col-5 align-items-end">
                 <div class="form-group text-justify">
                   <label for="status-date">Date & Time:</label>
-                  <input class="form-control" id="status-date" name="status-date" type="date">
+                  <input class="form-control stage-date" id="status-date" name="status-date" type="date">
                 </div>
                 <div class="form-group text-justify">
-                  <input class="form-control" id="status-time" name="status-time" type="text" maxlength="5" placeholder="HH:MM">
+                  <input class="form-control stage-time" id="status-time" name="status-time" type="text" maxlength="5" placeholder="HH:MM">
                   <div class="invalid-feedback">Please use the format HH:MM.
                   </div>
                 </div>
@@ -70,60 +70,5 @@
   {% endif %}
 {% endblock %}
 {% block javascript %}
-
-  <script>
-    $(document).ready(function () {
-
-      $('#new-application-form').submit(function (event) {
-        if (checkTimeFormat() === false) {
-          event.preventDefault();
-          return false;
-        }
-      });
-
-      $('#status-time').on('change', function (event) {
-        checkTimeFormat();
-      });
-
-      $('#company-name').on('input', function (event) {
-        if ($(this).val() != "") {
-          checkIfCompanyExists();
-        }
-      });
-    });
-
-    function checkTimeFormat() {
-      var input = $('#status-time').val();
-      if (input == "" || checkTimeRegex(input)) {
-        $('#status-time').removeClass('is-invalid');
-        return true;
-      }
-      $('#status-time').addClass('is-invalid');
-      return false;
-    }
-
-    // https://adamprescott.net/2014/01/08/validate-time-entry-with-javascript/
-    function checkTimeRegex(time) {
-      var regex = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
-      return time.match(regex);
-    }
-
-    function checkIfCompanyExists() {
-      var name = $('#company-name').val()
-      var ajax = new XMLHttpRequest();
-      ajax.onreadystatechange = function () {
-        if (ajax.readyState === 4 && ajax.status === 200) {
-          var response = JSON.parse(ajax.response)
-          $('#company-suggestion').empty();
-          if (response != null) {
-            response.forEach(function (item) {
-              $('#company-suggestion').append(new Option(item["company_name"]))
-            });
-          }
-        }
-      };
-      ajax.open("POST", "/check_existing_" + name, true);
-      ajax.send();
-    }
-  </script>
+  <script src="static/script.js"></script>
 {% endblock %}
