@@ -26,6 +26,10 @@ def get_project(project_id):
     return model.get_project(project_id)
 
 
+def get_last_project_datetime(user_id):
+    return model.get_last_project_datetime(user_id)
+
+
 def get_all_projects(user_id):
     return model.get_all_projects(user_id)
 

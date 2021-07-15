@@ -32,7 +32,16 @@ def new_project():
             and check_length(project_memo, length_pattern["memo"])) == False:
         return error(5)
 
-    created_on = datetime.now().strftime('%d-%m-%Y %H:%M')
+    format = '%d-%m-%Y %H:%M'
+    created_on = datetime.now().strftime(format)
+
+    last_project_date = controller.get_last_project_datetime(
+        session["user_id"])
+    if last_project_date != "":
+        difference = datetime.strptime(last_project_date, format) \
+            - datetime.strptime(created_on, format)
+        if (difference.seconds < 60000):
+            return error(12, 405)
 
     controller.create_project(
         session["user_id"], created_on, project_name, project_memo)
@@ -297,8 +306,8 @@ def register():
         return error(0)
 
     if (check_length(username, length_pattern["username"])
-            and check_length(password, length_pattern["password"])
-        and check_length(confirmation, length_pattern["password"])
+        and check_length(password, length_pattern["password"])
+            and check_length(confirmation, length_pattern["password"])
         ) == False:
         return error(5)
 
@@ -330,6 +339,11 @@ def check_username_availability(username):
 def check_existing_company(company_name):
     """ Used by Javascript when creating a new application """
     return controller.search_company_js(session["user_id"], company_name)
+
+
+@app.route("/check_last_project", methods=["POST"])
+def check_last_project_date():
+    return controller.get_last_project_datetime(session["user_id"])
 
 
 @app.route("/logout")

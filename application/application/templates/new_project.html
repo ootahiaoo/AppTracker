@@ -7,7 +7,7 @@
     <div class="card-body">
       <h3 class="card-title">Create A New Project</h3>
       <div class="card-text card-container">
-        <form action="/new_project" method="post">
+        <form action="/new_project" id="new-project-form" method="post">
           <div class="form-group row">
             <label for="project-name">Project name:</label>
             <input class="form-control" id="project-name" name="project-name" type="text" maxlength="50" aria-describedby="project-name-caption" placeholder="Example: 2021 job change, sophomore internship, job hunting abroad...">
@@ -20,9 +20,12 @@
             <small class="form-text text-muted" id="project-memo-caption">Anything you want to see about this job hunting on the projects list.</small>
           </div>
 
-          <button class="btn btn-primary" type="submit">Add New Project</button>
+          <button class="btn btn-primary" id="submit-button" type="submit">Add New Project</button>
         </form>
       </div>
     </div>
   </div>
+{% endblock %}
+{% block javascript %}
+  <script src="static/script_project.js"></script>
 {% endblock %}

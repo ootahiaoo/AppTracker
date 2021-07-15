@@ -52,7 +52,6 @@ class Application(object):
 
     @classmethod
     def from_json(cls, json_string):
-        print(json_string)
         json_dict = json.loads(json_string)
         return cls(**json_dict)
 
@@ -173,6 +172,21 @@ def get_project(project_id):
     return None
 
 
+def get_last_project_datetime(user_id):
+    with Database() as db:
+        cursor = db.cursor()
+        result = cursor.execute(
+            """SELECT created_on FROM projects 
+            WHERE user_id = ? 
+            ORDER BY created_on DESC""",
+            (user_id,)
+        ).fetchone()
+        if (result != None):
+            return result["created_on"]
+        else:
+            return ""
+
+
 def get_all_projects(user_id):
     with Database() as db:
         cursor = db.cursor()
@@ -222,7 +236,7 @@ def search_company_js(user_id, company_name):
         result = cursor.execute(
             "SELECT * FROM companies WHERE company_name LIKE ? AND user_id = ?",
             (company_name, user_id)
-        ).fetchone()
+        ).fetchall()
         return json.dumps(result)
 
 
