@@ -18,7 +18,8 @@ error_messages = {
     9: "must provide a role and a rank",
     10: "rank format is not valid",
     11: "must provide both date and time",
-    12: "must wait a minute before creating another project"
+    12: "must wait a minute before creating another project",
+    13: "must specify the application status "
 }
 
 length_pattern = {

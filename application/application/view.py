@@ -100,9 +100,15 @@ def new_application(project_id):
     date = request.form.get("status-date")
     time = request.form.get("status-time")
     memo = set_empty_response("application-memo")
-    application_status = request.form.get("default-status")
-    if not application_status:
-        application_status = set_empty_response("custom-status")
+
+    # Default status takes priority
+    default_status = request.form.get("default-status")
+    custom_status = request.form.get("custom-status")
+    if not default_status and not custom_status:
+        return error(13)
+    application_status = default_status
+    if not default_status:
+        application_status = custom_status
 
     if not date and not time:
         datetime = ""
@@ -186,9 +192,15 @@ def add_stage(application_id):
     date = request.form.get("stage-date")
     time = request.form.get("stage-time")
     stage_memo = set_empty_response("stage-memo")
-    type = request.form.get("default-status")
-    if not type:
-        type = set_empty_response("custom-status")
+
+    # Default status takes priority
+    default_status = request.form.get("default-status")
+    custom_status = request.form.get("custom-status")
+    if not default_status and not custom_status:
+        return error(13)
+    type = default_status
+    if not default_status:
+        type = custom_status
 
     if not date and not time:
         datetime = ""
@@ -221,9 +233,15 @@ def edit_stage(stage_id):
     date = request.form.get("stage-date")
     time = request.form.get("stage-time")
     stage_memo = set_empty_response("stage-memo")
-    type = request.form.get("default-status")
-    if not type:
-        type = set_empty_response("custom-status")
+
+    # Default status takes priority
+    default_status = request.form.get("default-status")
+    custom_status = request.form.get("custom-status")
+    if not default_status and not custom_status:
+        return error(13)
+    type = default_status
+    if not default_status:
+        type = custom_status
 
     if not date and not time:
         datetime = ""
@@ -343,6 +361,7 @@ def check_existing_company(company_name):
 
 @app.route("/check_last_project", methods=["POST"])
 def check_last_project_date():
+    """ Used by Javascript when creating a new project """
     return controller.get_last_project_datetime(session["user_id"])
 
 

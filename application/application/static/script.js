@@ -1,9 +1,14 @@
 $(document).ready(function () {
   $("#new-application-form, #edit-stage-form, #new-stage-form").submit(function (event) {
-    if (checkBothDateTime() === false || checkTimeFormat() === false) {
+    if (checkBothStatuses() === false || checkBothDateTime() === false || checkTimeFormat() === false) {
       event.preventDefault();
       return false;
     }
+  });
+
+  $("#default-status, #custom-status").on("change", function (event) {
+    $("#default-status")[0].setCustomValidity("");
+    $("#default-status")[0].reportValidity();
   });
 
   $(".stage-date").on("change", function (event) {
@@ -23,6 +28,17 @@ $(document).ready(function () {
     }
   });
 });
+
+function checkBothStatuses() {
+  var defaultStatus = $("#default-status");
+  var customStatus = $("#custom-status");
+  if (defaultStatus.val() == null && customStatus.val() == "") {
+    defaultStatus[0].setCustomValidity("Please choose a default status or write a custom one.");
+    defaultStatus[0].reportValidity();
+    return false;
+  }
+  return true;
+}
 
 function checkBothDateTime() {
   var date = $(".stage-date");

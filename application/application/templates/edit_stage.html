@@ -12,7 +12,7 @@
             <div class="form-group row text-justify">
               <label for="default-status" class="col-sm-3 col-form-label">Stage:</label>
               <div class="col">
-                <select class="form-control mb-2" name="default-status">
+                <select class="form-control mb-2" id="default-status" name="default-status">
                   <option disabled="disabled" selected="selected" value="">Default list</option>
                   {% for status in status_list %}
                     <option>{{ status }}</option>
