@@ -2,10 +2,12 @@ from flask import redirect, session, render_template, request
 from functools import wraps
 import re
 
-status = ["Preparing", "Casual meeting", "Sent resume", "1st interview",
-          "2nd interview", "3rd interview", "4th interview", "5th interview", "6th interview", "Final interview", "Offer", "Technical test", "Rejected", "Accepted", "On hold"]
+STATUS_LIST = ["Preparing", "Casual meeting", "Sent resume", "1st interview",
+               "2nd interview", "3rd interview", "4th interview",
+               "5th interview", "6th interview", "Final interview", "Offer",
+               "Technical test", "Rejected", "Accepted", "On hold"]
 
-error_messages = {
+ERROR_MESSAGES = {
     0: "may only use underscore, dash or alphanumeric characters",
     1: "must provide both username and password",
     2: "confirmation did not match password",
@@ -19,10 +21,11 @@ error_messages = {
     10: "rank format is not valid",
     11: "must provide both date and time",
     12: "must wait a minute before creating another project",
-    13: "must specify the application status "
+    13: "must specify the application status",
+    14: "already applied to this company in this project"
 }
 
-length_pattern = {
+LENGTH_PATTERN = {
     "username": {"min": 3, "max": 20},
     "password": {"min": 3, "max": 30},
     "project_name": {"min": 0, "max": 50},
@@ -35,7 +38,7 @@ length_pattern = {
 }
 
 
-def check_characters(list):
+def is_valid_characters(list):
     """
     https://www.geeksforgeeks.org/
     python-check-if-string-contain-only-defined-characters-using-regex/
@@ -48,9 +51,7 @@ def check_characters(list):
 
 
 def is_time_format(string):
-    """
-    https://stackoverflow.com/a/1322532/
-    """
+    """ https://stackoverflow.com/a/1322532/ """
     time_pattern = re.compile(r'^(([01]\d|2[0-3]):([0-5]\d)|24:00)$')
     return bool(time_pattern.match(string))
 
@@ -61,7 +62,7 @@ def is_rank_format(string):
     return False
 
 
-def check_length(string, pattern):
+def is_correct_length(string, pattern):
     string_length = len(string)
     return string_length >= pattern["min"] and string_length <= pattern["max"]
 
@@ -80,7 +81,7 @@ def login_required(f):
 
 
 def error(error, code=400):
-    message = error_messages[error]
+    message = ERROR_MESSAGES[error]
     return display_error(message, code)
 
 
@@ -98,9 +99,7 @@ def display_error(message, code=400):
 
 
 def set_empty_response(request_name):
-    """
-    Handle the arguments that can be left empty on purpose
-    """
+    """ Handle the arguments that can be left empty on purpose """
     response = request.form.get(request_name)
     if not response:
         response = ""

@@ -1,7 +1,7 @@
 from application import app, controller
-from application.helpers import check_characters, is_rank_format,\
-    is_time_format, login_required, status, error, display_error, \
-    check_length, length_pattern, set_empty_response
+from application.helpers import is_valid_characters, is_rank_format,\
+    is_time_format, login_required, STATUS_LIST, error, display_error, \
+    is_correct_length, LENGTH_PATTERN, set_empty_response
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.exceptions import default_exceptions, HTTPException, \
     InternalServerError
@@ -28,8 +28,8 @@ def new_project():
     project_name = set_empty_response("project-name")
     project_memo = set_empty_response("project-memo")
 
-    if (check_length(project_name, length_pattern["project_name"])
-            and check_length(project_memo, length_pattern["memo"])) == False:
+    if not (is_correct_length(project_name, LENGTH_PATTERN["project_name"])
+            and is_correct_length(project_memo, LENGTH_PATTERN["memo"])):
         return error(5)
 
     format = '%d-%m-%Y %H:%M'
@@ -63,8 +63,8 @@ def edit_project(project_id):
     ending_date = set_empty_response("ending-date")
     project_memo = set_empty_response("project-memo")
 
-    if (check_length(project_name, length_pattern["project_name"])
-            and check_length(project_memo, length_pattern["memo"])) == False:
+    if not (is_correct_length(project_name, LENGTH_PATTERN["project_name"])
+            and is_correct_length(project_memo, LENGTH_PATTERN["memo"])):
         return error(5)
 
     controller.edit_project(project_id, project_name,
@@ -89,7 +89,7 @@ def new_application(project_id):
     if request.method == "GET":
         return render_template("new_application.html",
                                project_id=project_id,
-                               stages=status)
+                               stages=STATUS_LIST)
 
     company_name = request.form.get("company-name")
     role = request.form.get("role")
@@ -115,28 +115,25 @@ def new_application(project_id):
     elif not date or not time:
         return error(11)
     else:
-        if is_time_format(time) == False:
+        if not is_time_format(time):
             return error(8)
         datetime = date + " " + time
 
-    if (check_length(company_name, length_pattern["company_name"])
-        and check_length(role, length_pattern["role"])
-        and check_length(memo, length_pattern["memo"])
-        and check_length(application_status, length_pattern["stage"])
-        and check_length(rank, length_pattern["rank"])
-            and check_length(datetime, length_pattern["datetime"])) == False:
+    if not (is_correct_length(company_name, LENGTH_PATTERN["company_name"])
+            and is_correct_length(role, LENGTH_PATTERN["role"])
+            and is_correct_length(memo, LENGTH_PATTERN["memo"])
+            and is_correct_length(application_status, LENGTH_PATTERN["stage"])
+            and is_correct_length(rank, LENGTH_PATTERN["rank"])
+            and is_correct_length(datetime, LENGTH_PATTERN["datetime"])):
         return error(5)
 
-    if is_rank_format(rank) == False:
+    if not is_rank_format(rank):
         return error(10)
 
-    company = controller.search_company(session["user_id"], company_name)
-    if not company:
-        controller.create_company(session["user_id"], company_name)
-        company_id = controller.get_company_id(
-            session["user_id"], company_name)
-    else:
-        company_id = company[0].id
+    company_id = controller.set_company_for_new_application(
+        session["user_id"], company_name, project_id)
+    if company_id is None:
+        return error(14)
 
     controller.create_application(
         project_id, company_id, role, memo, rank, application_status, datetime)
@@ -169,12 +166,12 @@ def edit_application(application_id):
         return error(9)
     memo = set_empty_response("application-memo")
 
-    if (check_length(role, length_pattern["role"])
-        and check_length(rank, length_pattern["rank"])
-            and check_length(memo, length_pattern["memo"])) == False:
+    if not (is_correct_length(role, LENGTH_PATTERN["role"])
+            and is_correct_length(rank, LENGTH_PATTERN["rank"])
+            and is_correct_length(memo, LENGTH_PATTERN["memo"])):
         return error(5)
 
-    if is_rank_format(rank) == False:
+    if not is_rank_format(rank):
         return error(10)
 
     controller.edit_application(application_id, role, rank, memo)
@@ -187,7 +184,7 @@ def add_stage(application_id):
     if request.method == "GET":
         return render_template("new_stage.html",
                                application_id=application_id,
-                               stages=status)
+                               stages=STATUS_LIST)
 
     date = request.form.get("stage-date")
     time = request.form.get("stage-time")
@@ -207,13 +204,13 @@ def add_stage(application_id):
     elif not time:
         return error(11)
     else:
-        if is_time_format(time) == False:
+        if not is_time_format(time):
             return error(8)
         datetime = date + " " + time
 
-    if (check_length(datetime, length_pattern["datetime"])
-        and check_length(stage_memo, length_pattern["memo"])
-            and check_length(type, length_pattern["stage"])) == False:
+    if not (is_correct_length(datetime, LENGTH_PATTERN["datetime"])
+            and is_correct_length(stage_memo, LENGTH_PATTERN["memo"])
+            and is_correct_length(type, LENGTH_PATTERN["stage"])):
         return error(5)
 
     controller.create_stage(application_id, type, datetime, stage_memo)
@@ -228,7 +225,7 @@ def edit_stage(stage_id):
     if request.method == "GET":
         return render_template("edit_stage.html",
                                stage=stage,
-                               status_list=status)
+                               status_list=STATUS_LIST)
 
     date = request.form.get("stage-date")
     time = request.form.get("stage-time")
@@ -248,13 +245,13 @@ def edit_stage(stage_id):
     elif not date or not time:
         return error(11)
     else:
-        if is_time_format(time) == False:
+        if not is_time_format(time):
             return error(8)
         datetime = date + " " + time
 
-    if (check_length(datetime, length_pattern["datetime"])
-        and check_length(stage_memo, length_pattern["memo"])
-            and check_length(type, length_pattern["stage"])) == False:
+    if not (is_correct_length(datetime, LENGTH_PATTERN["datetime"])
+            and is_correct_length(stage_memo, LENGTH_PATTERN["memo"])
+            and is_correct_length(type, LENGTH_PATTERN["stage"])):
         return error(5)
 
     controller.edit_stage(stage_id, type, datetime, stage_memo)
@@ -278,7 +275,7 @@ def search():
     keyword = request.form.get("q")
     if not keyword:
         return error(1)
-    if check_length(keyword, length_pattern["company_name"]) == False:
+    if not is_correct_length(keyword, LENGTH_PATTERN["company_name"]):
         return error(5)
     results = controller.search_company(session["user_id"], keyword)
     return render_template("search_result.html",
@@ -296,11 +293,11 @@ def login():
 
     if not username or not password:
         return error(1)
-    if check_characters([username, password]) == False:
+    if not is_valid_characters([username, password]):
         return error(0)
 
-    if (check_length(username, length_pattern["username"])
-            and check_length(password, length_pattern["password"])) == False:
+    if not (is_correct_length(username, LENGTH_PATTERN["username"])
+            and is_correct_length(password, LENGTH_PATTERN["password"])):
         return error(5)
 
     user = controller.get_user_by_username(username)
@@ -320,20 +317,20 @@ def register():
     if not username or not password or not confirmation:
         return error(1)
 
-    if check_characters([username, password, confirmation]) == False:
+    if not is_valid_characters([username, password, confirmation]):
         return error(0)
 
-    if (check_length(username, length_pattern["username"])
-        and check_length(password, length_pattern["password"])
-            and check_length(confirmation, length_pattern["password"])
-        ) == False:
+    if not (is_correct_length(username, LENGTH_PATTERN["username"])
+            and is_correct_length(password, LENGTH_PATTERN["password"])
+            and is_correct_length(confirmation, LENGTH_PATTERN["password"])
+            ):
         return error(5)
 
     if password != confirmation:
         return error(2)
 
     user = controller.get_user_by_username(username)
-    if user != None:
+    if user is not None:
         return error(3)
 
     controller.register_user(username, generate_password_hash(password))
@@ -348,15 +345,18 @@ def register():
 def check_username_availability(username):
     """ Used by Javascript on the login screen """
     value = controller.get_user_by_username(username)
-    if value != None:
+    if value is not None:
         return "Not available"
     return "Available"
 
 
-@app.route("/check_existing_<company_name>", methods=["POST"])
-def check_existing_company(company_name):
+@app.route("/check_existing_<company_name>_for_<project_id>", methods=["POST"])
+def check_existing_company(company_name, project_id):
     """ Used by Javascript when creating a new application """
-    return controller.search_company_js(session["user_id"], company_name)
+    return controller.search_company_js(
+        session["user_id"],
+        company_name,
+        project_id)
 
 
 @app.route("/check_last_project", methods=["POST"])

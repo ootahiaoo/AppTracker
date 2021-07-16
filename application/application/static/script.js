@@ -81,6 +81,6 @@ function checkIfCompanyExists() {
       }
     }
   };
-  ajax.open("POST", "/check_existing_" + name, true);
+  ajax.open("POST", "/check_existing_" + name + "_for_" + project_id, true);
   ajax.send();
 }

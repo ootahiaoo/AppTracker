@@ -118,25 +118,20 @@ def register_user(username, hashed_password):
 def get_user_with_id(id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        # TODO: catch db connection error
+        return cursor.execute(
             "SELECT * FROM users WHERE id = ?",
             (id,)
         ).fetchone()
-        if result != None:
-            return User.from_json(json.dumps(result))
-    return None
 
 
 def get_user_with_username(username):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             "SELECT * FROM users WHERE username = ?",
             (username,)
         ).fetchone()
-        if result != None:
-            return User.from_json(json.dumps(result))
-    return None
 
 
 def create_project(user_id, created_on, name, project_memo):
@@ -163,46 +158,32 @@ def edit_project(project_id, name, started_on, ended_on, project_memo):
 def get_project(project_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             "SELECT * FROM projects WHERE id = ?",
             (project_id,)
         ).fetchone()
-        if result != None:
-            return Project.from_json(json.dumps(result))
-    return None
 
 
 def get_last_project_datetime(user_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             """SELECT created_on FROM projects 
             WHERE user_id = ? 
             ORDER BY created_on DESC""",
             (user_id,)
         ).fetchone()
-        if (result != None):
-            return result["created_on"]
-        else:
-            return ""
 
 
 def get_all_projects(user_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             """SELECT * FROM projects 
             WHERE user_id = ? 
             ORDER BY created_on DESC""",
             (user_id,)
         ).fetchall()
-        if len(result) == 0:
-            return None
-        projects = []
-        for row in result:
-            project = Project.from_json(json.dumps(row))
-            projects.append(project)
-        return projects
 
 
 def create_company(user_id, company_name):
@@ -216,52 +197,28 @@ def search_company(user_id, company_name):
     with Database() as db:
         cursor = db.cursor()
         company_name = "%" + company_name + "%"
-        result = cursor.execute(
+        return cursor.execute(
             "SELECT * FROM companies WHERE company_name LIKE ? AND user_id = ?",
             (company_name, user_id)
         ).fetchall()
-        if len(result) == 0:
-            return None
-        companies = []
-        for row in result:
-            company = Company.from_json(json.dumps(row))
-            companies.append(company)
-        return companies
-
-
-def search_company_js(user_id, company_name):
-    with Database() as db:
-        cursor = db.cursor()
-        company_name = "%" + company_name + "%"
-        result = cursor.execute(
-            "SELECT * FROM companies WHERE company_name LIKE ? AND user_id = ?",
-            (company_name, user_id)
-        ).fetchall()
-        return json.dumps(result)
 
 
 def get_company_id(user_id, company_name):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             "SELECT id FROM companies WHERE company_name = ? AND user_id = ?",
             (company_name, user_id)
         ).fetchone()
-        if result != None:
-            return result["id"]
-    return None
 
 
 def get_company(company_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             "SELECT * FROM companies WHERE id = ?",
             (company_id,)
         ).fetchone()
-        if result != None:
-            return Company.from_json(json.dumps(result))
-    return None
 
 
 def create_application(project_id, company_id, role, memo, rank):
@@ -278,33 +235,29 @@ def create_application(project_id, company_id, role, memo, rank):
 def get_simple_application(application_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             """SELECT company_name, role, application_memo 
             FROM applications 
             JOIN companies ON companies.id = applications.company_id 
             WHERE applications.id = ?""",
             (application_id,)
         ).fetchone()
-        return result
 
 
 def get_application_id(project_id, company_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             """SELECT id FROM applications 
             WHERE project_id = ? AND company_id = ?""",
             (project_id, company_id)
         ).fetchone()
-        if result != None:
-            return result["id"]
-    return None
 
 
 def get_application(application_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             """SELECT id, project_id, name, company_id, role, 
             application_memo, rank, company_name, type, date 
             FROM (SELECT * FROM applications 
@@ -315,15 +268,12 @@ def get_application(application_id):
             WHERE id = ?""",
             (application_id,)
         ).fetchone()
-        if result != None:
-            return Application.from_json(json.dumps(result))
-    return None
 
 
 def get_all_applications(project_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             """SELECT id, project_id, name, company_id, role, 
             application_memo, rank, company_name, type, date 
             FROM (SELECT * FROM applications 
@@ -336,19 +286,21 @@ def get_all_applications(project_id):
             ORDER BY rank""",
             (project_id,)
         ).fetchall()
-        if len(result) == 0:
-            return None
-        applications = []
-        for row in result:
-            application = Application.from_json(json.dumps(row))
-            applications.append(application)
-        return applications
+
+
+def get_all_company_ids_from_project(project_id):
+    with Database() as db:
+        cursor = db.cursor()
+        return cursor.execute(
+            "SELECT company_id FROM applications WHERE project_id = ?",
+            (project_id,)
+        ).fetchall()
 
 
 def get_company_history(company_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             """SELECT id, project_id, name, company_id, role, 
             application_memo, rank, company_name, type, date 
             FROM (SELECT * FROM applications 
@@ -360,13 +312,6 @@ def get_company_history(company_id):
             GROUP BY project_id""",
             (company_id,)
         ).fetchall()
-        if len(result) == 0:
-            return None
-        applications = []
-        for row in result:
-            application = Application.from_json(json.dumps(row))
-            applications.append(application)
-        return applications
 
 
 def edit_application(application_id, role, rank, memo):
@@ -392,29 +337,19 @@ def create_stage(application_id, status, datetime, stage_memo):
 def get_stage(stage_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             "SELECT * FROM stage WHERE id = ?",
             (stage_id,)
         ).fetchone()
-        if result != None:
-            return Stage.from_json(json.dumps(result))
-    return None
 
 
 def get_process(application_id):
     with Database() as db:
         cursor = db.cursor()
-        result = cursor.execute(
+        return cursor.execute(
             "SELECT * FROM stage WHERE application_id = ? ORDER BY id DESC",
             (application_id,)
         ).fetchall()
-        if len(result) == 0:
-            return None
-        stages = []
-        for row in result:
-            stage = Stage.from_json(json.dumps(row))
-            stages.append(stage)
-        return stages
 
 
 def update_stage(stage_id, type, date, stage_memo):

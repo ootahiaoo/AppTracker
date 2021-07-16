@@ -70,5 +70,8 @@
   {% endif %}
 {% endblock %}
 {% block javascript %}
-  <script src="static/script.js"></script>
+  <script type="text/javascript">
+    var project_id = "{{ project_id }}"
+  </script>
+  <script type="text/javascript" src="static/script.js"></script>
 {% endblock %}
