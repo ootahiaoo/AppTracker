@@ -75,7 +75,6 @@ def edit_project(project_id):
 @app.route("/dashboard_<project_id>", methods=["GET", "POST"])
 @login_required
 def dashboard(project_id):
-    # Merge requests?
     project = controller.get_project(project_id)
     applications = controller.get_all_applications(project_id)
     return render_template("dashboard.html",
@@ -144,7 +143,6 @@ def new_application(project_id):
 @app.route("/application_details_<application_id>", methods=["GET", "POST"])
 @login_required
 def application_details(application_id):
-    # TODO: merge requests?
     application = controller.get_simple_application(application_id)
     stages = controller.get_process(application_id)
     return render_template("application_details.html",
@@ -175,6 +173,7 @@ def edit_application(application_id):
         return error(10)
 
     controller.edit_application(application_id, role, rank, memo)
+
     return application_details(application_id)
 
 

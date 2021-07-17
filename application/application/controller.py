@@ -118,7 +118,6 @@ def search_company_js(user_id, company_name, project_id):
 
 def create_application(project_id, company_id, role, memo, rank,
                        application_status, datetime):
-    # TODO: handle error, return response
     model.create_application(project_id, company_id, role, memo, rank)
     application_id = get_application_id(project_id, company_id)
     create_stage(application_id, application_status, datetime)

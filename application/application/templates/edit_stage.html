@@ -27,10 +27,10 @@
               {% if stage.date != "" %}
                 <label class="col-sm-3 col-form-label">Date & Time:</label>
                 <div class="col-sm-4">
-                  <input class="form-control-plaintext ml-1 stage-date" type="text" readonly="readonly" value="{{ stage.date }}">
+                  <input class="form-control-plaintext ml-1" type="text" readonly="readonly" value="{{ stage.date }}">
                 </div>
                 <div class="col-sm-4">
-                  <input class="form-control mb-2" name="stage-date" type="date">
+                  <input class="form-control mb-2 stage-date" name="stage-date" type="date">
                   <input class="form-control stage-time" name="stage-time" type="text" maxlength="5" placeholder="HH:MM">
                   <div class="invalid-feedback">Please use the format HH:MM.
                   </div>

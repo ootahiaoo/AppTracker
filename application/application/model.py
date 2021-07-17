@@ -243,7 +243,7 @@ def get_application(application_id):
         application_memo, rank, company_name, type, date 
         FROM (SELECT * FROM applications 
         JOIN companies ON companies.id = applications.company_id 
-        JOIN stage ON stage.application_id = applications.id 
+        JOIN stages ON stages.application_id = applications.id 
         JOIN projects ON projects.id = applications.project_id 
         GROUP BY applications.id) 
         WHERE id = ?""",
@@ -256,9 +256,9 @@ def get_all_applications(project_id):
         application_memo, rank, company_name, type, date 
         FROM (SELECT * FROM applications 
         JOIN companies ON companies.id = applications.company_id 
-        JOIN stage ON stage.application_id = applications.id 
+        JOIN stages ON stages.application_id = applications.id 
         JOIN projects ON projects.id = applications.project_id 
-        ORDER BY stage.id DESC) 
+        ORDER BY stages.id DESC) 
         WHERE project_id = ? 
         GROUP BY application_id 
         ORDER BY rank""",
@@ -277,9 +277,9 @@ def get_company_history(company_id):
         application_memo, rank, company_name, type, date 
         FROM (SELECT * FROM applications 
         JOIN companies ON companies.id = applications.company_id 
-        JOIN stage ON stage.application_id = applications.id 
+        JOIN stages ON stages.application_id = applications.id 
         JOIN projects ON projects.id = applications.project_id 
-        ORDER BY stage.id DESC) 
+        ORDER BY stages.id DESC) 
         WHERE company_id = ? 
         GROUP BY project_id""",
         (company_id,))
@@ -294,23 +294,23 @@ def edit_application(application_id, role, rank, memo):
 
 def create_stage(application_id, status, datetime, stage_memo):
     Database().commit(
-        """INSERT INTO stage (application_id, type, date, stage_memo) 
+        """INSERT INTO stages (application_id, type, date, stage_memo) 
         VALUES(?, ?, ?, ?)""",
         (application_id, status, datetime, stage_memo))
 
 
 def get_stage(stage_id):
-    return Database.fetch_one("SELECT * FROM stage WHERE id = ?", (stage_id,))
+    return Database.fetch_one("SELECT * FROM stages WHERE id = ?", (stage_id,))
 
 
 def get_process(application_id):
     return Database.fetch_all(
-        "SELECT * FROM stage WHERE application_id = ? ORDER BY id DESC",
+        "SELECT * FROM stages WHERE application_id = ? ORDER BY id DESC",
         (application_id,))
 
 
 def update_stage(stage_id, type, date, stage_memo):
     Database().commit(
-        """UPDATE stage SET type = ?, date = ?, stage_memo = ? 
+        """UPDATE stages SET type = ?, date = ?, stage_memo = ? 
         WHERE id = ?""",
         (type, date, stage_memo, stage_id))
