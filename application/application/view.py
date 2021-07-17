@@ -371,6 +371,7 @@ def logout():
     return redirect("/")
 
 
+@app.errorhandler(Exception)
 def errorhandler(e):
     if not isinstance(e, HTTPException):
         e = InternalServerError()
