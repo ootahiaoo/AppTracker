@@ -1,4 +1,5 @@
-from application import app, controller
+from application import app
+from application import controller
 from application.helpers import is_valid_characters, is_rank_format,\
     is_time_format, login_required, STATUS_LIST, error, display_error, \
     is_correct_length, LENGTH_PATTERN, set_empty_response
@@ -370,7 +371,7 @@ def logout():
     return redirect("/")
 
 
-@app.errorhandler(Exception)
+
 def errorhandler(e):
     if not isinstance(e, HTTPException):
         e = InternalServerError()

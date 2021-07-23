@@ -1,2 +1,5 @@
 /.flaskenv
 /__pycache__/
+/application/__pycache__/
+unibeautifyrc.yaml
+/flask/

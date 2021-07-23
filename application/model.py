@@ -1,6 +1,7 @@
 from application import app
 import json
 import sqlite3 as sql
+import os
 
 
 class User(object):
@@ -88,7 +89,7 @@ class Database(object):
         self.db_connection = None
 
     def __enter__(self):
-        connection = sql.connect("application/track.db")
+        connection = sql.connect(os.getenv("DATABASE_URL"))
         connection.row_factory = dict_factory
         self.db_connection = connection
         return self.db_connection

@@ -4,6 +4,7 @@ from tempfile import mkdtemp
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = "b'\xca\x7f0\xe0L\x84\xa1:\x81\xad\x04\x84l\xa5+<'"
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
