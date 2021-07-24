@@ -9,8 +9,8 @@
     <!-- Display memo? Edit memo? -->
     {% if history %}
 
-      <div class="container mt-3">
-        <table class="table table-responsive table-hover table-bordered">
+      <div class="container mt-3 table-responsive">
+        <table class="table table-hover table-bordered">
           <thead>
             <tr>
               <th class="col-3">Project</th>
@@ -23,7 +23,7 @@
           <tbody>
             {% for row in history %}
               <tr>
-                <td class="col-3">
+                <td scope="row" id="long-content">
                   <a href="/dashboard_{{ row.project_id}}">
                     {% if row.project_name == "" %}
                       n/a
@@ -31,23 +31,25 @@
                       {{ row.project_name }}
                       {% endif%}</a>
                   </td>
-                  <td class="col-3">
+                  <td id="long-content">
                     <a href="/application_details_{{ row.id }}">{{ row.role }}</a>
                   </td>
-                  <td class="col-2">{{ row.stage }}</td>
-                  <td class="col-1">
+                  <td id="long-content">{{ row.stage }}</td>
+                  <td>
                     {% if row.date == "" %}
                       n/a
                     {% else %}
                       {{ row.date }}
                     {% endif %}
                   </td>
-                  <td class="col-2 memo">
-                    {% if row.application_memo == "" %}
-                      n/a
-                    {% else %}
-                      {{ row.application_memo }}
-                    {% endif %}
+                  <td>
+                    <div id="memo">
+                      {% if row.application_memo == "" %}
+                        n/a
+                      {% else %}
+                        {{ row.application_memo }}
+                      {% endif %}
+                    </div>
                   </td>
                 </tr>
               {% endfor %}

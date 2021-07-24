@@ -69,6 +69,22 @@ thead {
     background-color: #f8f9fa !important;
 }
 
+#long-content {
+    min-width: 130px;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+#memo {
+    min-width: 250px;
+    max-height: 120px;
+    max-width: 400px;
+    overflow-y: auto;
+    word-wrap: break-word;
+    word-break: break-word;
+    margin: auto;
+}
+
 
 /* https://stackoverflow.com/questions/19592968/bootstrap-3-breakpoints-and-media-queries */
 
@@ -84,12 +100,6 @@ thead {
         padding-right: 0.7em;
         padding-left: 0.7em;
     }
-    .memo {
-        max-width: 120px !important;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 }
 
 @media screen and (min-width: 992px) {
@@ -103,10 +113,6 @@ thead {
     .card-column {
         padding-right: 3em;
         padding-left: 3em;
-    }
-    .memo {
-        word-wrap: break-word;
-        word-break: break-word;
     }
 }
 

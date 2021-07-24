@@ -16,58 +16,62 @@
     </div>
 
     {% if projects %}
-      <table class="table table-responsive table-hover table-bordered">
-        <thead>
-          <tr>
-            <th class="col-3">Project Name</th>
-            <th class="col-1">Creation Date</th>
-            <th class="col-1">Starting Date</th>
-            <th class="col-1">Ending Date</th>
-            <th class="col-3 memo">Memo</th>
-            <th class="col-1"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in projects %}
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
             <tr>
-              <td class="col-3">
-                <a href="/dashboard_{{ row.id }}">
-                  {% if row.name == "" %}
+              <th class="col-3">Project Name</th>
+              <th class="col-1">Creation Date</th>
+              <th class="col-1">Starting Date</th>
+              <th class="col-1">Ending Date</th>
+              <th class="col-3">Memo</th>
+              <th class="col-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in projects %}
+              <tr>
+                <td scope="row" id="long-content">
+                  <a href="/dashboard_{{ row.id }}">
+                    {% if row.name == "" %}
+                      n/a
+                    {% else %}
+                      {{ row.name }}
+                    {% endif %}
+                  </a>
+                </td>
+                <td>{{ simplify_date(row.created_on) }}</td>
+                <td>
+                  {% if row.started_on == ""%}
                     n/a
                   {% else %}
-                    {{ row.name }}
+                    {{ row.started_on }}
                   {% endif %}
-                </a>
-              </td>
-              <td class="col-1">{{ simplify_date(row.created_on) }}</td>
-              <td class="col-1">
-                {% if row.started_on == ""%}
-                  n/a
-                {% else %}
-                  {{ row.started_on }}
-                {% endif %}
-              </td>
-              <td class="col-1">
-                {% if row.ended_on == "" %}
-                  n/a
-                {% else %}
-                  {{ row.ended_on }}
-                {% endif %}
-              </td>
-              <td class="col-3 memo">
-                {% if row.project_memo == ""%}
-                  n/a
-                {% else %}
-                  {{ row.project_memo }}
-                {% endif %}
-              </td>
-              <td class="col-1">
-                <a href="/edit_project_{{ row.id }}"><img alt="Edit project" src="static/pencil.svg"></a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+                </td>
+                <td>
+                  {% if row.ended_on == "" %}
+                    n/a
+                  {% else %}
+                    {{ row.ended_on }}
+                  {% endif %}
+                </td>
+                <td>
+                  <div id="memo">
+                    {% if row.project_memo == ""%}
+                      n/a
+                    {% else %}
+                      {{ row.project_memo }}
+                    {% endif %}
+                  </div>
+                </td>
+                <td id="small-td">
+                  <a href="/edit_project_{{ row.id }}"><img alt="Edit project" src="static/pencil.svg"></a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% endif %}
   </div>
 {% endblock %}

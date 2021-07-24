@@ -15,48 +15,52 @@
       </div>
 
       {% if applications %}
-        <table class="table table-responsive table-hover table-bordered">
-          <thead>
-            <tr>
-              <th class="col-1">Rank</th>
-              <th class="col-3">Company Name</th>
-              <th class="col-3">Role</th>
-              <th class="col-2">Stage</th>
-              <th class="col-1">Date</th>
-              <th class="col-2 memo">Memo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in applications %}
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered">
+            <thead>
               <tr>
-                <td class="col-1">{{ row.rank }}</td>
-                <td class="col-3">
-                  <a href="/company_{{ row.company_id}}">
-                    {{ row.company_name }}</a>
-                </td>
-                <td class="col-3">
-                  <a href="/application_details_{{ row.id }}">
-                    {{ row.role }}</a>
-                </td>
-                <td class="col-2">{{ row.stage }}</td>
-                <td class="col-1">
-                  {% if row.date == "" %}
-                    n/a
-                  {% else %}
-                    {{ row.date }}
-                  {% endif %}
-                </td>
-                <td class="col-2 memo">
-                  {% if row.application_memo == "" %}
-                    n/a
-                  {% else %}
-                    {{ row.application_memo }}
-                  {% endif %}
-                </td>
+                <th class="col-1">Rank</th>
+                <th class="col-3">Company Name</th>
+                <th class="col-3">Role</th>
+                <th class="col-2">Stage</th>
+                <th class="col-1">Date</th>
+                <th class="col-3">Memo</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for row in applications %}
+                <tr>
+                  <td scope="row">{{ row.rank }}</td>
+                  <td id="long-content">
+                    <a href="/company_{{ row.company_id}}">
+                      {{ row.company_name }}</a>
+                  </td>
+                  <td id="long-content">
+                    <a href="/application_details_{{ row.id }}">
+                      {{ row.role }}</a>
+                  </td>
+                  <td id="long-content">{{ row.stage }}</td>
+                  <td>
+                    {% if row.date == "" %}
+                      n/a
+                    {% else %}
+                      {{ row.date }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div id="memo">
+                      {% if row.application_memo == "" %}
+                        n/a
+                      {% else %}
+                        {{ row.application_memo }}
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% endif %}
     {% endif %}
   </div>

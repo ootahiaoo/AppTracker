@@ -1,67 +1,79 @@
 {% extends "layout.html" %}
 {% block title %}Application Details{% endblock %}
 {% block main %}
-<div class="container">
+  <div class="container">
     {% if application %}
-    <div class="card">
+      <div class="card">
         <div class="card-body">
-            <h3 class="card-title">Interview Process</h3>
-            <dl class="row text-justify">
-                <dt class="col-sm-3">Company:</dt>
-                <dd class="col-sm-9">
-                    <span>{{ application['company_name'] }}</span>
-                </dd>
+          <h3 class="card-title">Interview Process</h3>
+          <dl class="row text-justify">
+            <dt class="col-sm-3">Company:</dt>
+            <dd class="col-sm-9">
+              <span>{{ application['company_name'] }}</span>
+            </dd>
 
-                <dt class="col-sm-3">Role:</dt>
-                <dd class="col-sm-9">
-                    <span>{{ application['role'] }}</span>
-                </dd>
+            <dt class="col-sm-3">Role:</dt>
+            <dd class="col-sm-9">
+              <span>{{ application['role'] }}</span>
+            </dd>
 
-                <dt class="col-sm-3">Application Memo:</dt>
-                <dd class="col-sm-9">
-                    <span>{% if application['application_memo'] == "" %}
-                        n/a
-                        {% else %}
-                        {{ application['application_memo'] }}
-                        {% endif %}</span>
-                </dd>
-            </dl>
+            <dt class="col-sm-3">Application Memo:</dt>
+            <dd class="col-sm-9">
+              <span>
+                {% if application['application_memo'] == "" %}
+                  n/a
+                {% else %}
+                  {{ application['application_memo'] }}
+                {% endif %}
+              </span>
+            </dd>
+          </dl>
         </div>
-    </div>
+      </div>
 
-    <div class="center-block text-center my-3">
+      <div class="center-block text-center my-3">
         <a class="btn btn-outline-primary btn-sm mx-3" href="/edit_application_{{ application_id }}">
-            Edit Application</a>
+          Edit Application</a>
         <a class="btn btn-primary btn-sm mx-3" href="/new_stage_{{ application_id }}">Add Next Stage</a>
-    </div>
+      </div>
 
-    {% if stages %}
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th style="width:20%">Stage</th>
-                <th style="width:20%">Date</th>
-                <th style="width:50%">Interview Memo</th>
-                <th style="width:10%"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in stages %}
-            <tr>
-                <td>{{ row.type }}</td>
-                <td>{% if row.date == ""%}n/a{% else %}{{ row.date }}{% endif %}</td>
-                <td class="memo">{% if row.stage_memo == "" %}
-                    n/a
-                    {% else %}
-                    {{ row.stage_memo }}
-                    {% endif %}</td>
-                <td>
+      {% if stages %}
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th class="col-3">Stage</th>
+                <th class="col-2">Date</th>
+                <th class="col-4">Interview Memo</th>
+                <th class="col-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in stages %}
+                <tr>
+                  <td scope="row" id="long-content">{{ row.type }}</td>
+                  <td>
+                    {% if row.date == ""%}n/a{% else %}{{ row.date }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div id="memo">
+                      {% if row.stage_memo == "" %}
+                        n/a
+                      {% else %}
+                        {{ row.stage_memo }}
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td>
                     <a href="/edit_stage_{{ row.id }}"><img alt="Edit stage" src="/static/pencil.svg"></a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %} {% endif %}
-</div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
 {% endblock %}
