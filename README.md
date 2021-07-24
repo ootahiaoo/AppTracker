@@ -6,4 +6,7 @@ A Python (Flask) web application to help you keep track of your current and prev
 
 [Demo](https://tahia910.pythonanywhere.com/)
 
-Technology used: HTML/CSS/JavaScript(Bootstrap, Jquery, Ajax) Python(Flask, Jinja2), SQL(Sqlite3)
+## Technology used: 
+HTML/CSS/JavaScript (Bootstrap, jQuery, Ajax) 
+
+Python (Flask, Jinja2), SQL (Sqlite3)
