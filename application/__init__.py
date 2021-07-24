@@ -31,6 +31,7 @@ from application import model
 from application import helpers
 from application import view
 
+
 @app.context_processor
 def utility_processor():
     """
@@ -40,8 +41,20 @@ def utility_processor():
     https://stackoverflow.com/questions/6036082/call-a-python-function-from-jinja2/22966127#22966127
     """
     def simplify_date(datetime_string):
-        return datetime.strptime(datetime_string, "%d-%m-%Y %H:%M").date()
+        if datetime_string:
+            return datetime.strptime(datetime_string, "%Y-%m-%d %H:%M").date()
+        else:
+            return ""
+
     return dict(simplify_date=simplify_date)
+
+
+@app.template_filter("slice_time")
+def slice_time(datetime_string):
+    if datetime_string:
+        return datetime_string[-5:]
+    else:
+        return ""
 
 
 if __name__ == "__main__":

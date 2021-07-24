@@ -33,7 +33,7 @@ def new_project():
             and is_correct_length(project_memo, LENGTH_PATTERN["memo"])):
         return error(5)
 
-    format = '%d-%m-%Y %H:%M'
+    format = "%Y-%m-%d %H:%M"
     created_on = datetime.now().strftime(format)
 
     last_project_date = controller.get_last_project_datetime(
@@ -68,8 +68,8 @@ def edit_project(project_id):
             and is_correct_length(project_memo, LENGTH_PATTERN["memo"])):
         return error(5)
 
-    controller.edit_project(project_id, project_name,
-                            starting_date, ending_date, project_memo)
+    controller.edit_project(
+        project_id, project_name, starting_date, ending_date, project_memo)
     return redirect("/")
 
 
