@@ -3,3 +3,5 @@
 /application/__pycache__/
 unibeautifyrc.yaml
 /flask/
+*.pyc
+.vagrant
